@@ -5,6 +5,6 @@
   "description": "Static Container Utilization Checker / CBM Calculator MVP.",
   "scripts": {
     "start": "python3 -m http.server 4173 -d code",
-    "test": "node tests/run-ac-fixtures.js && node tests/run-rule-coverage.js"
+    "test": "node tests/run-ac-fixtures.js && node tests/run-rule-coverage.js && node tests/run-stage7-ui.js"
   }
 }

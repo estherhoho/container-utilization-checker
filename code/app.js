@@ -566,11 +566,13 @@
     var fitStatus = metrics.verdict.badge;
     var rec = metrics.targetRecommendedContainer || metrics.recommendedContainer || "Split shipment";
     var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
+    var recommendedMarkup = '<div class="recommendation-chip"><span>Recommended:</span><strong>' + escapeHtml(rec) + "</strong></div>";
+    var payloadFormula = '<div class="payload-formula"><span>Payload utilization = total gross weight / selected container max payload</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</strong></div>";
     return [
       '<section class="metric-grid" aria-label="Container result metrics">',
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p><span class="metric-icon">C</span></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Best plan</div><div class="metric-rec">' + escapeHtml(rec) + "</div></div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p><span class="metric-icon">C</span></div><div class="metric-value">' + escapeHtml(fitStatus) + "</div>" + recommendedMarkup + "</div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p><span class="metric-icon">V</span></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">' + escapeHtml(metrics.volumeBand) + "</div>") + tags + "</div>",
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p><span class="metric-icon">W</span></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</div></div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p><span class="metric-icon">W</span></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + "%</div>" + payloadFormula + "</div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">CBM Summary</p><span class="metric-icon">B</span></div><div class="summary-stack"><div><span>Carton CBM</span><strong>' + fmt(metrics.cartonCbm, 3) + ' m³</strong></div><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Wasted space</span><strong>' + fmt(metrics.wastedSpace, 2) + ' m³</strong></div></div></div>',
       "</section>"
     ].join("");
@@ -599,7 +601,6 @@
       "</div>"
     ].join("");
   }
-
 
   function handleSubmit(event) {
     event.preventDefault();

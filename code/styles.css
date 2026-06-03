@@ -98,13 +98,10 @@ h1 {
 
 .guide-card,
 .form-section,
-.optional-fields,
 .result-card,
 .empty-state,
 .metric-card,
-.chart-card,
-.recommendations,
-.disabled-ctas {
+.chart-card {
   border: 1px solid var(--line);
   background: var(--panel);
   border-radius: 8px;
@@ -176,8 +173,7 @@ h1 {
 }
 
 .secondary-button,
-.primary-button,
-.disabled-button {
+.primary-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -211,8 +207,7 @@ h1 {
   gap: 14px;
 }
 
-.form-section,
-.optional-fields {
+.form-section {
   padding: 16px;
 }
 
@@ -267,8 +262,7 @@ h1 {
   gap: 12px;
 }
 
-.input-grid.three,
-.input-grid.optional {
+.input-grid.three {
   grid-template-columns: 1fr;
 }
 
@@ -410,17 +404,6 @@ input:focus {
   margin: 10px 0 0;
 }
 
-.optional-fields summary {
-  min-height: 44px;
-  cursor: pointer;
-  color: #344054;
-  font-weight: 800;
-}
-
-.optional-fields .input-grid {
-  margin-top: 12px;
-}
-
 .actions {
   padding-bottom: 8px;
 }
@@ -555,11 +538,37 @@ input:focus {
   line-height: 1.45;
 }
 
-.metric-rec {
-  font-size: 18px;
-  font-weight: 850;
+.recommendation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  border-radius: 999px;
+  margin-top: 12px;
+  padding: 6px 10px;
+  background: var(--teal-soft);
   color: var(--teal-dark);
-  line-height: 1.2;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.recommendation-chip strong {
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.payload-formula {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.payload-formula strong {
+  color: var(--ink);
+  font-size: 13px;
 }
 
 .circle-meter {
@@ -624,8 +633,6 @@ input:focus {
 }
 
 .chart-title h3,
-.recommendations h3,
-.disabled-ctas h3,
 .supporting-details h3 {
   margin: 0;
   font-size: 15px;
@@ -660,40 +667,6 @@ input:focus {
   font-size: 12px;
 }
 
-.recommendations {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
-}
-
-.rule-list {
-  display: grid;
-  gap: 8px;
-}
-
-.rule-item {
-  border-radius: 7px;
-  padding: 9px 10px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.rule-item.info {
-  background: #eff8ff;
-  color: #175cd3;
-}
-
-.rule-item.warning {
-  background: #fff7e6;
-  color: #ad4e00;
-}
-
-.rule-item.error {
-  background: #fff1f0;
-  color: #b42318;
-}
-
 .supporting-details {
   margin-bottom: 14px;
 }
@@ -725,55 +698,6 @@ input:focus {
   text-align: right;
 }
 
-.disabled-ctas {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
-}
-
-.cta-grid {
-  display: grid;
-  gap: 10px;
-}
-
-.disabled-button {
-  position: relative;
-  min-height: 48px;
-  border: 1px dashed #98a2b3;
-  background: #f9fafb;
-  color: #475467;
-  cursor: not-allowed;
-}
-
-.disabled-button:focus {
-  outline: 3px solid rgba(13, 158, 138, 0.16);
-}
-
-.coming-badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  border-radius: 999px;
-  padding: 2px 8px;
-  background: #eef2f6;
-  color: #475467;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .methodology {
   margin: 0;
   border-top: 1px solid var(--line);
@@ -790,19 +714,11 @@ input:focus {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .input-grid.optional {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .container-options {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .metric-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .cta-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -834,10 +750,6 @@ input:focus {
     max-height: calc(100vh - 36px);
     overflow: auto;
   }
-
-  .optional-fields[open] {
-    display: block;
-  }
 }
 
 @media (max-width: 767px) {
@@ -862,8 +774,7 @@ input:focus {
   }
 
   .chart-card,
-  .recommendations,
-  .disabled-ctas {
+  .supporting-details {
     padding: 12px;
   }
 }

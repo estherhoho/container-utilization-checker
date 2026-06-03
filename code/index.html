@@ -23,9 +23,9 @@
           <div>
             <h2>How to use this tool</h2>
             <ol>
-              <li>Fill in your carton dimensions, quantity, and weight.</li>
+              <li>Add one or more shipment lines with carton dimensions, quantity, and weight.</li>
               <li>Pick your container type.</li>
-              <li>See if your shipment fits and which container plan is recommended.</li>
+              <li>See combined CBM, weight, fit, and which container plan is recommended.</li>
             </ol>
             <p>Plan your container in under 90 seconds before you book.</p>
           </div>
@@ -36,62 +36,19 @@
         </div>
 
         <form id="calculator-form" class="calculator-form" novalidate>
-          <section class="form-section">
-            <h2>Carton dimensions</h2>
-            <div class="unit-row">
-              <span>Dimension unit</span>
-              <div class="segmented" role="group" aria-label="Dimension unit">
-                <button type="button" class="segment is-active" data-dim-unit="cm">cm</button>
-                <button type="button" class="segment" data-dim-unit="in">inch</button>
+          <section class="form-section shipment-section" data-shipment-section>
+            <div class="section-heading-row">
+              <div>
+                <h2>Shipment lines</h2>
+                <small class="helper">Add each carton or SKU line. Totals are combined for the container recommendation.</small>
               </div>
+              <button class="secondary-button compact-button" type="button" data-add-line>Add line</button>
             </div>
-            <div class="input-grid three">
-              <label class="field">
-                <span>Length</span>
-                <input id="length" name="length" inputmode="decimal" type="number" step="any" min="0" data-field="length">
-                <small class="error" data-error-for="length"></small>
-              </label>
-              <label class="field">
-                <span>Width</span>
-                <input id="width" name="width" inputmode="decimal" type="number" step="any" min="0" data-field="width">
-                <small class="error" data-error-for="width"></small>
-              </label>
-              <label class="field">
-                <span>Height</span>
-                <input id="height" name="height" inputmode="decimal" type="number" step="any" min="0" data-field="height">
-                <small class="error" data-error-for="height"></small>
-              </label>
+            <div class="shipment-lines" data-lines-list></div>
+            <div class="shipment-toolbar">
+              <button class="secondary-button compact-button" type="button" data-clear-lines>Clear all</button>
+              <div class="live-lines shipment-live" data-shipment-live></div>
             </div>
-            <p class="helper" data-dim-helper>Outer dimensions of the carton in cm or inch.</p>
-            <div class="live-lines" data-live-dimensions></div>
-          </section>
-
-          <section class="form-section">
-            <h2>Shipment quantity</h2>
-            <label class="field">
-              <span>Carton quantity</span>
-              <input id="quantity" name="quantity" inputmode="numeric" type="number" step="1" min="1" data-field="quantity">
-              <small class="helper">Total number of cartons in this shipment.</small>
-              <small class="error" data-error-for="quantity"></small>
-            </label>
-          </section>
-
-          <section class="form-section">
-            <h2>Gross weight</h2>
-            <div class="unit-row">
-              <span>Weight unit</span>
-              <div class="segmented" role="group" aria-label="Weight unit">
-                <button type="button" class="segment is-active" data-weight-unit="kg">kg</button>
-                <button type="button" class="segment" data-weight-unit="lb">lb</button>
-              </div>
-            </div>
-            <label class="field">
-              <span>Gross weight per carton</span>
-              <input id="weight" name="weight" inputmode="decimal" type="number" step="any" min="0" data-field="weight">
-              <small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small>
-              <small class="error" data-error-for="weight"></small>
-            </label>
-            <div class="live-lines" data-live-weight></div>
           </section>
 
           <section class="form-section">

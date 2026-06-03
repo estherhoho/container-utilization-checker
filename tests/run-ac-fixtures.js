@@ -50,6 +50,28 @@ const fixtures = [
     id: "AC-Unit-1",
     input: { length: 24, width: 16, height: 12, quantity: 100, weight: 26, dimensionUnit: "in", weightUnit: "lb", containerType: "40GP", stackable: "yes" },
     expect: { cartonCbm: 0.075, totalCbm: 7.55, totalWeightKg: 1179, rules: ["R1"], actionIncludes: ["Small shipment", "LCL likely cheaper"] }
+  },
+  {
+    id: "AC-Multi-1",
+    input: {
+      containerType: "20GP",
+      lines: [
+        { id: "line-a", label: "Furniture cartons", length: 60, width: 40, height: 30, quantity: 300, weight: 12, dimensionUnit: "cm", weightUnit: "kg", stackable: "yes" },
+        { id: "line-b", label: "Accessories cartons", length: 24, width: 16, height: 12, quantity: 100, weight: 26, dimensionUnit: "in", weightUnit: "lb", stackable: "yes" },
+        { id: "line-c", label: "Tile cartons", length: 40, width: 40, height: 20, quantity: 400, weight: 23, dimensionUnit: "cm", weightUnit: "kg", stackable: "yes" }
+      ]
+    },
+    expect: {
+      totalCbm: 41.95,
+      totalWeightKg: 13979,
+      totalCartons: 800,
+      lineCount: 3,
+      recommendedContainer: "40GP",
+      largestCbmLabel: "Furniture cartons",
+      largestWeightLabel: "Tile cartons",
+      rules: ["R7", "R8"],
+      actionIncludes: ["Does not fit in 20GP", "Switch to 40GP"]
+    }
   }
 ];
 
@@ -75,6 +97,17 @@ function runFixture(fixture) {
   if (expected.cartonCbm !== undefined) assert(approx(result.cartonCbm, expected.cartonCbm, 0.006), `${fixture.id}: carton CBM ${result.cartonCbm}`);
   if (expected.totalCbm !== undefined) assert(approx(result.totalCbm, expected.totalCbm, 0.06), `${fixture.id}: total CBM ${result.totalCbm}`);
   if (expected.totalWeightKg !== undefined) assert(approx(result.totalWeightKg, expected.totalWeightKg, 2), `${fixture.id}: total kg ${result.totalWeightKg}`);
+  if (expected.totalCartons !== undefined) assert(result.totalCartons === expected.totalCartons, `${fixture.id}: total cartons ${result.totalCartons}`);
+  if (expected.lineCount !== undefined) assert(result.lineCount === expected.lineCount, `${fixture.id}: line count ${result.lineCount}`);
+  if (expected.recommendedContainer !== undefined) assert(result.recommendedContainer === expected.recommendedContainer, `${fixture.id}: recommended ${result.recommendedContainer}`);
+  if (expected.largestCbmLabel !== undefined) assert(result.contributors.cbm.label === expected.largestCbmLabel, `${fixture.id}: largest CBM ${result.contributors.cbm.label}`);
+  if (expected.largestWeightLabel !== undefined) assert(result.contributors.weight.label === expected.largestWeightLabel, `${fixture.id}: largest weight ${result.contributors.weight.label}`);
+  if (result.rows && result.rows.length > 1) {
+    const rowCbmTotal = result.rows.reduce((total, row) => total + row.totalCbm, 0);
+    const rowWeightTotal = result.rows.reduce((total, row) => total + row.totalWeightKg, 0);
+    assert(approx(result.totalCbm, rowCbmTotal, 0.0001), `${fixture.id}: total CBM does not equal row sum`);
+    assert(approx(result.totalWeightKg, rowWeightTotal, 0.0001), `${fixture.id}: total weight does not equal row sum`);
+  }
 
   const ruleIds = result.visibleRules.map((rule) => rule.id);
   expected.rules.forEach((rule) => {

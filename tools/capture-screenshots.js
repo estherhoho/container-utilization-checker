@@ -102,6 +102,24 @@ async function captureViewport(name, width, height, mobile) {
   const load = client.waitFor("Page.loadEventFired");
   await client.send("Page.navigate", { url: "http://localhost:4173" });
   await load;
+  let lineControlCheck = null;
+  if (mobile) {
+    const lineControlResult = await client.send("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const add = document.querySelector('[data-add-line]');
+        add.click();
+        add.click();
+        const afterAdd = document.querySelectorAll('[data-line-id]').length;
+        document.querySelector('[data-remove-line]')?.click();
+        const afterRemove = document.querySelectorAll('[data-line-id]').length;
+        add.click();
+        const afterReAdd = document.querySelectorAll('[data-line-id]').length;
+        return { afterAdd, afterRemove, afterReAdd, passed: afterAdd >= 3 && afterRemove >= 2 && afterReAdd >= 3 };
+      })()`
+    });
+    lineControlCheck = lineControlResult.result.value;
+  }
   await client.send("Runtime.evaluate", {
     expression: `
       localStorage.removeItem('cbm_guide_dismissed');
@@ -130,7 +148,8 @@ async function captureViewport(name, width, height, mobile) {
           text: button.textContent.trim()
         })),
         disclaimer: document.querySelector('.disclaimer-strip')?.textContent.trim(),
-        resultHeadline: document.querySelector('[data-verdict-block] h2')?.textContent.trim()
+        resultHeadline: document.querySelector('[data-verdict-block] h2')?.textContent.trim(),
+        shipmentLinesInForm: document.querySelectorAll('[data-line-id]').length
       };
     })()`
   });
@@ -138,7 +157,7 @@ async function captureViewport(name, width, height, mobile) {
   const file = path.join(outputDir, `${name}-result.png`);
   fs.writeFileSync(file, Buffer.from(screenshot.data, "base64"));
   client.close();
-  return { file, metrics: metricsResult.result.value };
+  return { file, metrics: metricsResult.result.value, lineControlCheck };
 }
 
 async function main() {

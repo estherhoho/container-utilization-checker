@@ -35,6 +35,12 @@ input {
   font: inherit;
 }
 
+textarea,
+select,
+input {
+  font: inherit;
+}
+
 button {
   min-height: 44px;
 }
@@ -201,6 +207,12 @@ h1 {
   box-shadow: 0 8px 18px rgba(13, 158, 138, 0.18);
 }
 
+.compact-button {
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
 .calculator-form {
   display: flex;
   flex-direction: column;
@@ -213,6 +225,135 @@ h1 {
 
 .form-section h2 {
   margin-bottom: 12px;
+}
+
+.section-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.section-heading-row h2 {
+  margin-bottom: 4px;
+}
+
+.shipment-section {
+  display: grid;
+  gap: 12px;
+}
+
+.shipment-lines {
+  display: grid;
+  gap: 12px;
+}
+
+.shipment-line {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #fff;
+}
+
+.line-header {
+  display: grid;
+  gap: 10px;
+}
+
+.line-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.line-number {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.text-button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 10px;
+  background: #fff;
+  color: var(--teal-dark);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.text-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.line-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.line-grid.dimensions {
+  grid-template-columns: 1fr;
+}
+
+.line-settings {
+  display: grid;
+  gap: 10px;
+}
+
+.line-unit-row,
+.line-stack-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.line-stack-row .segmented,
+.line-unit-row .segmented {
+  min-height: 38px;
+}
+
+.line-stack-row .segment,
+.line-unit-row .segment {
+  min-height: 32px;
+  min-width: 56px;
+}
+
+.row-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 26px;
+}
+
+.shipment-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #eef2f6;
+  padding-top: 12px;
+}
+
+.shipment-live {
+  margin-top: 0;
 }
 
 .unit-row {
@@ -296,6 +437,10 @@ input:focus {
 
 .field.has-error input {
   border-color: var(--error);
+  outline-color: rgba(255, 77, 79, 0.16);
+}
+
+.field.has-error input:focus {
   outline-color: rgba(255, 77, 79, 0.16);
 }
 
@@ -621,6 +766,27 @@ input:focus {
   margin-bottom: 14px;
 }
 
+.contributor-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  border-top: 1px solid #eef2f6;
+  padding-top: 10px;
+}
+
+.contributor-list div {
+  display: grid;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.contributor-list strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
 .chart-title {
   display: flex;
   align-items: center;
@@ -711,6 +877,24 @@ input:focus {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .line-grid.dimensions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .line-grid.quantity-weight {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .line-settings {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .shipment-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .container-options {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -768,6 +952,34 @@ input:focus {
 
   .metric-card {
     min-height: 132px;
+  }
+
+  .section-heading-row {
+    flex-direction: column;
+  }
+
+  .section-heading-row .compact-button {
+    width: 100%;
+  }
+
+  .line-actions {
+    justify-content: stretch;
+  }
+
+  .line-actions .text-button {
+    flex: 1 1 auto;
+  }
+
+  .line-unit-row,
+  .line-stack-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .line-unit-row .segmented,
+  .line-stack-row .segmented {
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
   }
 
   .chart-card,

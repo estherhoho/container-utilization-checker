@@ -11,21 +11,12 @@
       "hasHorizontalScroll": false,
       "verdictVisibleAboveFold": true,
       "supportingDetailsOpen": true,
-      "disabledCtas": [
-        {
-          "ariaDisabled": "true",
-          "nativeDisabled": false,
-          "text": "Generate Supplier Email Draft Coming in v1.1"
-        },
-        {
-          "ariaDisabled": "true",
-          "nativeDisabled": false,
-          "text": "Download Utilization Report Coming in v1.1"
-        }
-      ],
+      "disabledCtas": [],
       "disclaimer": "Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.",
-      "resultHeadline": "40GP fits at healthy 54% utilization."
-    }
+      "resultHeadline": "40GP is a tight fit at 86% utilization.",
+      "shipmentLinesInForm": 3
+    },
+    "lineControlCheck": null
   },
   "mobile": {
     "file": "/Users/estherho/sc_product/products/container-utilization-checker/outputs/mobile-result.png",
@@ -39,20 +30,16 @@
       "hasHorizontalScroll": false,
       "verdictVisibleAboveFold": true,
       "supportingDetailsOpen": false,
-      "disabledCtas": [
-        {
-          "ariaDisabled": "true",
-          "nativeDisabled": false,
-          "text": "Generate Supplier Email Draft Coming in v1.1"
-        },
-        {
-          "ariaDisabled": "true",
-          "nativeDisabled": false,
-          "text": "Download Utilization Report Coming in v1.1"
-        }
-      ],
+      "disabledCtas": [],
       "disclaimer": "Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.",
-      "resultHeadline": "40GP fits at healthy 54% utilization."
+      "resultHeadline": "40GP is a tight fit at 86% utilization.",
+      "shipmentLinesInForm": 3
+    },
+    "lineControlCheck": {
+      "afterAdd": 3,
+      "afterRemove": 2,
+      "afterReAdd": 3,
+      "passed": true
     }
   }
 }

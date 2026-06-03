@@ -55,13 +55,45 @@
     return unit === "lb" ? value * 0.45359237 : value;
   }
 
-  function validateInputs(input) {
+  function getInputLines(input) {
+    if (Array.isArray(input.lines)) return input.lines;
+    return [{
+      id: "line-1",
+      label: input.label || input.itemLabel || "",
+      length: input.length,
+      width: input.width,
+      height: input.height,
+      quantity: input.quantity,
+      weight: input.weight,
+      dimensionUnit: input.dimensionUnit || "cm",
+      weightUnit: input.weightUnit || "kg",
+      stackable: input.stackable
+    }];
+  }
+
+  function hasAnyLineValue(line) {
+    return ["label", "length", "width", "height", "quantity", "weight"].some(function some(field) {
+      return line[field] !== null && line[field] !== undefined && String(line[field]).trim() !== "";
+    });
+  }
+
+  function getLineKey(line, index) {
+    return line.id || "line-" + (index + 1);
+  }
+
+  function labelForLine(line, index) {
+    var label = line.label ? String(line.label).trim() : "";
+    return label || "Line " + (index + 1);
+  }
+
+  function validateLine(line, index, keyedErrors, isMulti) {
     var errors = {};
-    var length = toNumber(input.length);
-    var width = toNumber(input.width);
-    var height = toNumber(input.height);
-    var quantity = toNumber(input.quantity);
-    var weight = toNumber(input.weight);
+    var prefix = isMulti ? getLineKey(line, index) + "." : "";
+    var length = toNumber(line.length);
+    var width = toNumber(line.width);
+    var height = toNumber(line.height);
+    var quantity = toNumber(line.quantity);
+    var weight = toNumber(line.weight);
 
     if (!(length > 0)) errors.length = "Length must be > 0.";
     if (!(width > 0)) errors.width = "Width must be > 0.";
@@ -70,23 +102,66 @@
     if (quantity > 0 && !Number.isInteger(quantity)) errors.quantity = "Quantity must be a whole number.";
     if (!(weight > 0)) errors.weight = "Gross weight must be > 0.";
 
+    Object.keys(errors).forEach(function each(field) {
+      keyedErrors[prefix + field] = errors[field];
+    });
+    return errors;
+  }
+
+  function validateInputs(input) {
+    var isMulti = Array.isArray(input.lines);
+    var lines = getInputLines(input);
+    var activeLines = lines.filter(hasAnyLineValue);
+    var linesToValidate = activeLines.length ? lines : lines.slice(0, 1);
+    var errors = {};
+    var lineErrors = {};
+    var validLineCount = 0;
+
+    linesToValidate.forEach(function each(line, index) {
+      var originalIndex = lines.indexOf(line);
+      var shouldValidate = activeLines.length ? hasAnyLineValue(line) : index === 0;
+      if (!shouldValidate) return;
+      var keyedLineErrors = validateLine(line, originalIndex, errors, isMulti);
+      if (Object.keys(keyedLineErrors).length) {
+        lineErrors[getLineKey(line, originalIndex)] = keyedLineErrors;
+      } else {
+        validLineCount += 1;
+      }
+    });
+
+    if (!validLineCount && !Object.keys(errors).length) {
+      errors[isMulti ? getLineKey(lines[0] || {}, 0) + ".length" : "length"] = "Length must be > 0.";
+    }
+
     return {
-      valid: Object.keys(errors).length === 0,
-      errors: errors
+      valid: Object.keys(errors).length === 0 && validLineCount > 0,
+      errors: errors,
+      lineErrors: lineErrors,
+      validLineCount: validLineCount
     };
   }
 
-  function normalizeInput(input) {
-    var dimUnit = input.dimensionUnit || "cm";
-    var weightUnit = input.weightUnit || "kg";
-    var length = toNumber(input.length);
-    var width = toNumber(input.width);
-    var height = toNumber(input.height);
-    var quantity = toNumber(input.quantity);
-    var weight = toNumber(input.weight);
+  function normalizeLine(line, index) {
+    var dimUnit = line.dimensionUnit || "cm";
+    var weightUnit = line.weightUnit || "kg";
+    var length = toNumber(line.length);
+    var width = toNumber(line.width);
+    var height = toNumber(line.height);
+    var quantity = toNumber(line.quantity);
+    var weight = toNumber(line.weight);
+    var lengthM = dimensionToMeters(length, dimUnit);
+    var widthM = dimensionToMeters(width, dimUnit);
+    var heightM = dimensionToMeters(height, dimUnit);
+    var weightKg = weightToKg(weight, weightUnit);
+    var cartonCbm = lengthM * widthM * heightM;
+    var totalCbm = cartonCbm * quantity;
+    var totalWeightKg = weightKg * quantity;
 
     return {
+      id: getLineKey(line, index),
+      label: labelForLine(line, index),
       original: {
+        label: line.label || "",
         length: length,
         width: width,
         height: height,
@@ -94,30 +169,71 @@
         weight: weight,
         dimensionUnit: dimUnit,
         weightUnit: weightUnit,
-        containerType: input.containerType || "40GP",
-        stackable: input.stackable !== "no" && input.stackable !== false
+        stackable: line.stackable !== "no" && line.stackable !== false
       },
-      lengthM: dimensionToMeters(length, dimUnit),
-      widthM: dimensionToMeters(width, dimUnit),
-      heightM: dimensionToMeters(height, dimUnit),
+      lengthM: lengthM,
+      widthM: widthM,
+      heightM: heightM,
       quantity: quantity,
-      weightKg: weightToKg(weight, weightUnit),
-      containerType: input.containerType || "40GP",
-      stackable: input.stackable !== "no" && input.stackable !== false
+      weightKg: weightKg,
+      cartonCbm: cartonCbm,
+      totalCbm: totalCbm,
+      totalWeightKg: totalWeightKg,
+      stackable: line.stackable !== "no" && line.stackable !== false
     };
   }
 
+  function normalizeInput(input) {
+    var rows = getInputLines(input)
+      .map(normalizeLine)
+      .filter(function filter(row) {
+        return row.lengthM > 0 && row.widthM > 0 && row.heightM > 0 && row.quantity > 0 && Number.isInteger(row.quantity) && row.weightKg > 0;
+      });
+    var firstRow = rows[0] || normalizeLine({}, 0);
+    var totalCbm = rows.reduce(function sum(total, row) { return total + row.totalCbm; }, 0);
+    var totalWeightKg = rows.reduce(function sum(total, row) { return total + row.totalWeightKg; }, 0);
+    var totalCartons = rows.reduce(function sum(total, row) { return total + row.quantity; }, 0);
+
+    return {
+      original: {
+        length: firstRow.original.length,
+        width: firstRow.original.width,
+        height: firstRow.original.height,
+        quantity: totalCartons,
+        weight: firstRow.original.weight,
+        dimensionUnit: firstRow.original.dimensionUnit,
+        weightUnit: firstRow.original.weightUnit,
+        containerType: input.containerType || "40GP",
+        stackable: rows.every(function every(row) { return row.stackable; }),
+        lines: rows
+      },
+      rows: rows,
+      lengthM: firstRow.lengthM,
+      widthM: firstRow.widthM,
+      heightM: firstRow.heightM,
+      quantity: totalCartons,
+      weightKg: firstRow.weightKg,
+      containerType: input.containerType || "40GP",
+      stackable: rows.every(function every(row) { return row.stackable; }),
+      totalCbm: totalCbm,
+      totalWeightKg: totalWeightKg,
+      lineCount: rows.length
+    };
+  }
+
+  function hasRowDimensionOverflow(row, container) {
+    return row.lengthM > container.length || row.widthM > container.width || row.heightM > container.height;
+  }
+
   function hasDimensionOverflow(normalized, container) {
-    return normalized.lengthM > container.length || normalized.widthM > container.width || normalized.heightM > container.height;
+    return normalized.rows.some(function some(row) { return hasRowDimensionOverflow(row, container); });
   }
 
   function fitsContainer(normalized, type, targetVolume) {
+    var shipment = normalized.rows ? normalized : normalizeInput(normalized);
     var container = CONTAINERS[type];
-    var cartonCbm = normalized.lengthM * normalized.widthM * normalized.heightM;
-    var totalCbm = cartonCbm * normalized.quantity;
-    var totalWeightKg = normalized.weightKg * normalized.quantity;
     var maxVolume = targetVolume ? container.volume * targetVolume : container.volume;
-    return !hasDimensionOverflow(normalized, container) && totalCbm <= maxVolume && totalWeightKg <= container.payload;
+    return !hasDimensionOverflow(shipment, container) && shipment.totalCbm <= maxVolume && shipment.totalWeightKg <= container.payload;
   }
 
   function smallestContainer(normalized, targetVolume) {
@@ -186,13 +302,13 @@
     return sortRules(rules);
   }
 
-  function getSanityTags(normalized) {
-    var validDims = normalized.lengthM > 0 && normalized.widthM > 0 && normalized.heightM > 0;
-    if (!validDims || !(normalized.weightKg > 0)) return [];
+  function getSanityTagsForLine(row) {
+    var validDims = row.lengthM > 0 && row.widthM > 0 && row.heightM > 0;
+    if (!validDims || !(row.weightKg > 0)) return [];
 
-    var cartonCbm = normalized.lengthM * normalized.widthM * normalized.heightM;
-    var longestCm = Math.max(normalized.lengthM, normalized.widthM, normalized.heightM) * 100;
-    var density = normalized.weightKg / cartonCbm;
+    var cartonCbm = row.cartonCbm || row.lengthM * row.widthM * row.heightM;
+    var longestCm = Math.max(row.lengthM, row.widthM, row.heightM) * 100;
+    var density = row.weightKg / cartonCbm;
     var tags = [];
 
     if (longestCm >= 40 && longestCm <= 70 && cartonCbm >= 0.04 && cartonCbm <= 0.1) {
@@ -214,6 +330,27 @@
     return tags;
   }
 
+  function getSanityTags(normalized) {
+    if (normalized.rows && normalized.rows.length) {
+      var largest = normalized.rows.slice().sort(function sort(a, b) { return b.totalCbm - a.totalCbm; })[0];
+      return getSanityTagsForLine(largest);
+    }
+    return getSanityTagsForLine(normalized);
+  }
+
+  function getLargestContributors(rows) {
+    var byCbm = rows.slice().sort(function sort(a, b) { return b.totalCbm - a.totalCbm; })[0] || null;
+    var byWeight = rows.slice().sort(function sort(a, b) { return b.totalWeightKg - a.totalWeightKg; })[0] || null;
+    return {
+      cbm: byCbm,
+      weight: byWeight
+    };
+  }
+
+  function containerRank(type) {
+    return ORDERED_CONTAINERS.indexOf(type);
+  }
+
   function buildVerdict(metrics) {
     var selected = metrics.container.type;
     var rec = metrics.recommendedContainer;
@@ -225,7 +362,7 @@
       return {
         badge: "Carton Too Large",
         tone: "error",
-        headline: "Carton too large for " + selected + ".",
+        headline: "At least one carton is too large for " + selected + ".",
         action: "Carton too large for this container. Consider OOG or repack."
       };
     }
@@ -289,7 +426,7 @@
       };
     }
 
-    if (recStrict && recStrict !== selected) {
+    if (recStrict && recStrict !== selected && containerRank(recStrict) < containerRank(selected)) {
       var recStrictUtil = (metrics.totalCbm / CONTAINERS[recStrict].volume) * 100;
       var utilizationWord = recStrictUtil >= 60 && recStrictUtil <= 85 ? "healthy" : "lower";
       return {
@@ -297,6 +434,24 @@
         tone: "warning",
         headline: selected + " is over-spec.",
         action: selected + " is over-spec. " + recStrict + " fits at " + utilizationWord + " " + fmt(recStrictUtil, 0) + "% utilization."
+      };
+    }
+
+    if (visibleRules.indexOf("R6") >= 0) {
+      return {
+        badge: "Tight Fit",
+        tone: "warning",
+        headline: selected + " is very tight at " + fmt(metrics.volumeUtil, 0) + "% utilization.",
+        action: "Real loading may fail. Size up or confirm loading plan with your forwarder."
+      };
+    }
+
+    if (visibleRules.indexOf("R5") >= 0) {
+      return {
+        badge: "Fits",
+        tone: "warning",
+        headline: selected + " is a tight fit at " + fmt(metrics.volumeUtil, 0) + "% utilization.",
+        action: "Tight fit. Confirm carton orientation with forwarder."
       };
     }
 
@@ -320,14 +475,14 @@
   function calculate(input) {
     var validation = validateInputs(input);
     if (!validation.valid) {
-      return { valid: false, errors: validation.errors };
+      return { valid: false, errors: validation.errors, lineErrors: validation.lineErrors };
     }
 
     var normalized = normalizeInput(input);
     var container = CONTAINERS[normalized.containerType];
-    var cartonCbm = normalized.lengthM * normalized.widthM * normalized.heightM;
-    var totalCbm = cartonCbm * normalized.quantity;
-    var totalWeightKg = normalized.weightKg * normalized.quantity;
+    var cartonCbm = normalized.rows.length === 1 ? normalized.rows[0].cartonCbm : 0;
+    var totalCbm = normalized.totalCbm;
+    var totalWeightKg = normalized.totalWeightKg;
     var volumeUtil = (totalCbm / container.volume) * 100;
     var payloadUtil = (totalWeightKg / container.payload) * 100;
     var dimensionOverflow = hasDimensionOverflow(normalized, container);
@@ -337,10 +492,13 @@
     var metrics = {
       valid: true,
       normalized: normalized,
+      rows: normalized.rows,
+      lineCount: normalized.lineCount,
       container: container,
       cartonCbm: cartonCbm,
       totalCbm: totalCbm,
       totalWeightKg: totalWeightKg,
+      totalCartons: normalized.quantity,
       volumeUtil: volumeUtil,
       payloadUtil: payloadUtil,
       volumeBand: getBand(volumeUtil),
@@ -349,6 +507,7 @@
       recommendedContainer: recommendedContainer,
       targetRecommendedContainer: targetRecommendedContainer,
       wastedSpace: wastedSpace,
+      contributors: getLargestContributors(normalized.rows),
       sanityTags: getSanityTags(normalized)
     };
 
@@ -360,164 +519,16 @@
     return metrics;
   }
 
-  function readInputState() {
-    return {
-      length: getField("length").value,
-      width: getField("width").value,
-      height: getField("height").value,
-      quantity: getField("quantity").value,
-      weight: getField("weight").value,
-      dimensionUnit: state.dimensionUnit,
-      weightUnit: state.weightUnit,
-      containerType: getSelectedContainer(),
-      stackable: state.stackable ? "yes" : "no"
-    };
-  }
-
-  function getField(name) {
-    return document.querySelector('[data-field="' + name + '"]');
-  }
-
-  function setField(name, value) {
-    getField(name).value = value;
-  }
-
-  function getSelectedContainer() {
-    return document.querySelector('input[name="containerType"]:checked').value;
-  }
-
-  function setContainer(type) {
-    var input = document.querySelector('input[name="containerType"][value="' + type + '"]');
-    if (input) input.checked = true;
-    updateContainerCards();
-    updateContainerEcho();
-  }
-
-  function setSegments(selector, activeValue, attr) {
-    document.querySelectorAll(selector).forEach(function each(button) {
-      button.classList.toggle("is-active", button.getAttribute(attr) === activeValue);
-    });
-  }
-
-  function convertDimensionUnit(nextUnit) {
-    if (nextUnit === state.dimensionUnit) return;
-    ["length", "width", "height"].forEach(function each(field) {
-      var input = getField(field);
-      var value = toNumber(input.value);
-      if (value > 0) {
-        input.value = nextUnit === "in" ? round(value / 2.54, 1) : round(value * 2.54, 1);
-      }
-    });
-    state.dimensionUnit = nextUnit;
-    setSegments("[data-dim-unit]", nextUnit, "data-dim-unit");
-    updateLiveHints();
-    if (state.submitted) clearValidErrors();
-  }
-
-  function convertWeightUnit(nextUnit) {
-    if (nextUnit === state.weightUnit) return;
-    var input = getField("weight");
-    var value = toNumber(input.value);
-    if (value > 0) {
-      input.value = nextUnit === "lb" ? round(value * 2.20462, 1) : round(value / 2.20462, 1);
-    }
-    state.weightUnit = nextUnit;
-    setSegments("[data-weight-unit]", nextUnit, "data-weight-unit");
-    updateLiveHints();
-    if (state.submitted) clearValidErrors();
-  }
-
-  function updateContainerCards() {
-    var selected = getSelectedContainer();
-    document.querySelectorAll(".option-card").forEach(function each(card) {
-      var input = card.querySelector("input");
-      card.classList.toggle("is-selected", input.value === selected);
-    });
-  }
-
-  function updateContainerEcho() {
-    var c = CONTAINERS[getSelectedContainer()];
-    var echo = document.querySelector("[data-container-echo]");
-    echo.textContent = c.type + " planning estimate: " + fmt(c.volume, 1) + " CBM, " + fmtInt(c.payload) + " kg payload, interior " + fmt(c.length, 3) + " × " + fmt(c.width, 3) + " × " + fmt(c.height, 3) + " m.";
-    updateLiveHints();
-  }
-
-  function clearErrors() {
-    document.querySelectorAll(".field").forEach(function each(field) { field.classList.remove("has-error"); });
-    document.querySelectorAll("[data-error-for]").forEach(function each(error) { error.textContent = ""; });
-  }
-
-  function showErrors(errors) {
-    clearErrors();
-    Object.keys(errors).forEach(function each(key) {
-      var field = getField(key);
-      var wrapper = field ? field.closest(".field") : null;
-      var error = document.querySelector('[data-error-for="' + key + '"]');
-      if (wrapper) wrapper.classList.add("has-error");
-      if (error) error.textContent = errors[key];
-    });
-    var first = Object.keys(errors)[0];
-    if (first && getField(first)) getField(first).scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-
-  function clearValidErrors() {
-    if (!state.submitted) return;
-    var validation = validateInputs(readInputState());
-    document.querySelectorAll("[data-error-for]").forEach(function each(error) {
-      var key = error.getAttribute("data-error-for");
-      if (!validation.errors[key]) {
-        error.textContent = "";
-        var field = getField(key);
-        if (field) field.closest(".field").classList.remove("has-error");
-      }
-    });
-  }
-
-  function tagMarkup(tag) {
-    return '<span class="tag-pill ' + tag.tone + '">' + escapeHtml(tag.text) + "</span>";
-  }
-
-  function updateLiveHints() {
-    if (!root.document) return;
-    var input = readInputState();
-    var normalized = normalizeInput(input);
-    var dimLines = [];
-    var weightLines = [];
-    var tags = getSanityTags(normalized);
-    var validation = validateInputs(input);
-    var c = CONTAINERS[input.containerType];
-
-    if (normalized.lengthM > 0 && normalized.widthM > 0 && normalized.heightM > 0) {
-      var cartonCbm = normalized.lengthM * normalized.widthM * normalized.heightM;
-      dimLines.push('<span class="live-line">Carton CBM: ' + fmt(cartonCbm, 3) + " m³</span>");
-      if (normalized.quantity > 0) {
-        dimLines.push('<span class="live-line">Total shipment CBM: ' + fmt(cartonCbm * normalized.quantity, 2) + " m³</span>");
-      }
-      if (hasDimensionOverflow(normalized, c)) {
-        dimLines.unshift('<span class="tag-pill error">Carton too large for selected container</span>');
-      }
-    }
-
-    if (normalized.quantity > 0 && normalized.weightKg > 0) {
-      weightLines.push('<span class="live-line">Total shipment weight: ' + fmtInt(normalized.quantity * normalized.weightKg) + " kg</span>");
-    }
-
-    if (validation.valid || (normalized.lengthM > 0 && normalized.widthM > 0 && normalized.heightM > 0 && normalized.weightKg > 0)) {
-      tags.slice(0, 3).forEach(function each(tag) {
-        dimLines.push(tagMarkup(tag));
-      });
-    }
-
-    document.querySelector("[data-live-dimensions]").innerHTML = dimLines.slice(0, 5).join("");
-    document.querySelector("[data-live-weight]").innerHTML = weightLines.slice(0, 2).join("");
-  }
-
   function escapeHtml(value) {
     return String(value)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  function tagMarkup(tag) {
+    return '<span class="tag-pill ' + tag.tone + '">' + escapeHtml(tag.text) + "</span>";
   }
 
   function meterSvg(percent, band, label) {
@@ -531,6 +542,60 @@
       '<circle class="circle-bg" cx="44" cy="44" r="' + radius + '"></circle>',
       '<circle class="circle-fg ' + tone + '" cx="44" cy="44" r="' + radius + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + dash + '"></circle>',
       "</svg>"
+    ].join("");
+  }
+
+  function renderContributorInsights(metrics) {
+    if (!metrics.contributors.cbm || !metrics.contributors.weight) return "";
+    return [
+      '<div class="contributor-list" aria-label="Shipment contributor insights">',
+      '<div><span>Largest space contributor</span><strong>' + escapeHtml(metrics.contributors.cbm.label) + " — " + fmt(metrics.contributors.cbm.totalCbm, 2) + " CBM</strong></div>",
+      '<div><span>Largest weight contributor</span><strong>' + escapeHtml(metrics.contributors.weight.label) + " — " + fmtInt(metrics.contributors.weight.totalWeightKg) + " kg</strong></div>",
+      "</div>"
+    ].join("");
+  }
+
+  function renderMetricGrid(metrics, utilizationSuppressed) {
+    var fitStatus = metrics.verdict.badge;
+    var rec = metrics.targetRecommendedContainer || metrics.recommendedContainer || "Split shipment";
+    var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
+    var recommendedMarkup = '<div class="recommendation-chip"><span>Recommended:</span><strong>' + escapeHtml(rec) + "</strong></div>";
+    var limitingFactor = metrics.payloadUtil > metrics.volumeUtil ? "weight" : "space";
+    var volumeFormula = '<div class="utilization-copy"><span>Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.</span><strong>' + fmt(metrics.totalCbm, 2) + " CBM / " + fmt(metrics.container.volume, 1) + " CBM</strong></div>";
+    var payloadFormula = '<div class="utilization-copy"><span>Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</strong></div>";
+    return [
+      '<section class="metric-grid" aria-label="Container result metrics">',
+      '<div class="metric-card summary-card"><div class="metric-head"><p class="metric-label">CBM Summary</p></div><div class="summary-stack primary-summary"><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + ' kg</strong></div><div><span>Total cartons</span><strong>' + fmtInt(metrics.totalCartons) + '</strong></div><div><span>Shipment lines</span><strong>' + fmtInt(metrics.lineCount) + "</strong></div></div>" + renderContributorInsights(metrics) + "</div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Likely limiting factor: ' + escapeHtml(limitingFactor) + "</div>" + recommendedMarkup + "</div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">Space use: ' + escapeHtml(metrics.volumeBand) + "</div>" + volumeFormula) + tags + "</div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">Weight use: ' + escapeHtml(metrics.payloadBand) + "</div>" + payloadFormula + "</div>",
+      "</section>"
+    ].join("");
+  }
+
+  function renderChart(metrics, volumeFill, volumeTone) {
+    return [
+      '<section class="chart-card" aria-label="Capacity visualization">',
+      '<div class="chart-title"><h3>Capacity visualization</h3><span class="metric-sub">' + fmt(metrics.totalCbm, 2) + " / " + fmt(metrics.container.volume, 1) + ' CBM</span></div>',
+      '<div class="stacked-bar"><div class="stacked-fill ' + volumeTone + '" style="width:' + volumeFill + '%"></div></div>',
+      '<div class="bar-legend"><span>Used capacity</span><span>Remaining planning space: ' + fmt(metrics.wastedSpace, 2) + " CBM</span></div>",
+      "</section>"
+    ].join("");
+  }
+
+  function renderDetails(metrics) {
+    var lineRows = metrics.rows.map(function map(row) {
+      return '<div class="detail-row"><span>' + escapeHtml(row.label) + '</span><strong>' + fmt(row.cartonCbm, 3) + " CBM each · " + fmt(row.totalCbm, 2) + " CBM · " + fmtInt(row.totalWeightKg) + " kg</strong></div>";
+    }).join("");
+    return [
+      '<div class="detail-grid">',
+      '<div class="detail-row"><span>Shipment lines counted</span><strong>' + fmtInt(metrics.lineCount) + "</strong></div>",
+      '<div class="detail-row"><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + " m³</strong></div>",
+      '<div class="detail-row"><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg</strong></div>",
+      '<div class="detail-row"><span>Selected container max</span><strong>' + fmt(metrics.container.volume, 1) + " CBM / " + fmtInt(metrics.container.payload) + " kg</strong></div>",
+      '<div class="detail-row"><span>Container interior</span><strong>' + fmt(metrics.container.length, 3) + " × " + fmt(metrics.container.width, 3) + " × " + fmt(metrics.container.height, 3) + " m</strong></div>",
+      lineRows,
+      "</div>"
     ].join("");
   }
 
@@ -550,7 +615,7 @@
       "<p>" + escapeHtml(metrics.verdict.action) + "</p>",
       "</section>",
       renderMetricGrid(metrics, utilizationSuppressed),
-      utilizationSuppressed ? '<section class="chart-card"><p class="support-note">Utilization cannot be calculated — carton dimension exceeds container interior.</p></section>' : renderChart(metrics, volumeFill, volumeTone),
+      utilizationSuppressed ? '<section class="chart-card"><p class="support-note">Utilization cannot be calculated — at least one carton dimension exceeds container interior.</p></section>' : renderChart(metrics, volumeFill, volumeTone),
       '<details class="supporting-details"' + detailsOpen + '><summary>Show calculation details</summary>' + renderDetails(metrics) + "</details>",
       '<p class="methodology">Container volumes and payload limits used in this tool are typical planning values from carrier equipment guides. They are not loading guarantees. Internal dimensions vary by carrier and container age.</p>',
       "</div>",
@@ -562,45 +627,323 @@
     }
   }
 
-  function renderMetricGrid(metrics, utilizationSuppressed) {
-    var fitStatus = metrics.verdict.badge;
-    var rec = metrics.targetRecommendedContainer || metrics.recommendedContainer || "Split shipment";
-    var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
-    var recommendedMarkup = '<div class="recommendation-chip"><span>Recommended:</span><strong>' + escapeHtml(rec) + "</strong></div>";
-    var limitingFactor = metrics.payloadUtil > metrics.volumeUtil ? "weight" : "space";
-    var volumeFormula = '<div class="utilization-copy"><span>Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.</span><strong>' + fmt(metrics.totalCbm, 2) + " CBM / " + fmt(metrics.container.volume, 1) + " CBM</strong></div>";
-    var payloadFormula = '<div class="utilization-copy"><span>Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</strong></div>";
+  var state = {
+    lines: [],
+    nextLineId: 1,
+    submitted: false
+  };
+
+  function createLine(data) {
+    var line = data || {};
+    var id = line.id || "line-" + state.nextLineId;
+    state.nextLineId += 1;
+    return {
+      id: id,
+      label: line.label || "",
+      length: line.length || "",
+      width: line.width || "",
+      height: line.height || "",
+      quantity: line.quantity || "",
+      weight: line.weight || "",
+      dimensionUnit: line.dimensionUnit || "cm",
+      weightUnit: line.weightUnit || "kg",
+      stackable: line.stackable === "no" || line.stackable === false ? false : true
+    };
+  }
+
+  function getSelectedContainer() {
+    return document.querySelector('input[name="containerType"]:checked').value;
+  }
+
+  function setContainer(type) {
+    var input = document.querySelector('input[name="containerType"][value="' + type + '"]');
+    if (input) input.checked = true;
+    updateContainerCards();
+    updateContainerEcho();
+  }
+
+  function setSegments(selector, activeValue, attr) {
+    document.querySelectorAll(selector).forEach(function each(button) {
+      button.classList.toggle("is-active", button.getAttribute(attr) === activeValue);
+    });
+  }
+
+  function getStateLine(id) {
+    return state.lines.filter(function filter(line) { return line.id === id; })[0];
+  }
+
+  function lineMarkup(line, index) {
+    var removeDisabled = state.lines.length <= 1 ? " disabled" : "";
+    var dimCmActive = line.dimensionUnit === "cm" ? " is-active" : "";
+    var dimInActive = line.dimensionUnit === "in" ? " is-active" : "";
+    var weightKgActive = line.weightUnit === "kg" ? " is-active" : "";
+    var weightLbActive = line.weightUnit === "lb" ? " is-active" : "";
+    var stackYesActive = line.stackable ? " is-active" : "";
+    var stackNoActive = line.stackable ? "" : " is-active";
     return [
-      '<section class="metric-grid" aria-label="Container result metrics">',
-      '<div class="metric-card summary-card"><div class="metric-head"><p class="metric-label">CBM Summary</p></div><div class="summary-stack primary-summary"><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + ' kg</strong></div><div><span>Cartons</span><strong>' + fmtInt(metrics.normalized.quantity) + '</strong></div><div><span>Carton CBM</span><strong>' + fmt(metrics.cartonCbm, 3) + ' m³</strong></div></div></div>',
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Likely limiting factor: ' + escapeHtml(limitingFactor) + "</div>" + recommendedMarkup + "</div>",
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">Space use: ' + escapeHtml(metrics.volumeBand) + "</div>" + volumeFormula) + tags + "</div>",
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">Weight use: ' + escapeHtml(metrics.payloadBand) + "</div>" + payloadFormula + "</div>",
-      "</section>"
+      '<article class="shipment-line" data-line-id="' + escapeHtml(line.id) + '">',
+      '<div class="line-header">',
+      '<div class="line-title-row"><span class="line-number">Line ' + (index + 1) + '</span><div class="line-actions"><button class="text-button" type="button" data-duplicate-line="' + escapeHtml(line.id) + '">Duplicate</button><button class="text-button" type="button" data-remove-line="' + escapeHtml(line.id) + '"' + removeDisabled + ">Remove</button></div></div>",
+      '<label class="field"><span>Item / SKU label</span><input type="text" value="' + escapeHtml(line.label) + '" data-line-field="label" data-error-key="' + escapeHtml(line.id) + '.label" aria-label="Line ' + (index + 1) + ' item label"></label>',
+      "</div>",
+      '<div class="line-settings">',
+      '<div class="line-unit-row"><span>Dimension unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' dimension unit"><button type="button" class="segment' + dimCmActive + '" data-line-dim-unit="cm">cm</button><button type="button" class="segment' + dimInActive + '" data-line-dim-unit="in">inch</button></div></div>',
+      '<div class="line-stack-row"><span>Stackable</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' stackable"><button type="button" class="segment' + stackYesActive + '" data-line-stackable="yes">Yes</button><button type="button" class="segment' + stackNoActive + '" data-line-stackable="no">No</button></div></div>',
+      "</div>",
+      '<div class="line-grid dimensions">',
+      lineFieldMarkup(line, "length", "Length", index),
+      lineFieldMarkup(line, "width", "Width", index),
+      lineFieldMarkup(line, "height", "Height", index),
+      "</div>",
+      '<p class="helper">Outer dimensions of the carton in cm or inch.</p>',
+      '<div class="line-grid quantity-weight">',
+      lineFieldMarkup(line, "quantity", "Carton quantity", index, "numeric", "1"),
+      '<div class="field-group"><div class="line-unit-row"><span>Weight unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' weight unit"><button type="button" class="segment' + weightKgActive + '" data-line-weight-unit="kg">kg</button><button type="button" class="segment' + weightLbActive + '" data-line-weight-unit="lb">lb</button></div></div>' + lineFieldMarkup(line, "weight", "Gross weight per carton", index) + '<small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small></div>',
+      "</div>",
+      '<div class="row-summary" data-row-summary="' + escapeHtml(line.id) + '"></div>',
+      "</article>"
     ].join("");
   }
 
-  function renderChart(metrics, volumeFill, volumeTone) {
+  function lineFieldMarkup(line, field, label, index, inputMode, step) {
+    var key = line.id + "." + field;
     return [
-      '<section class="chart-card" aria-label="Capacity visualization">',
-      '<div class="chart-title"><h3>Capacity visualization</h3><span class="metric-sub">' + fmt(metrics.totalCbm, 2) + " / " + fmt(metrics.container.volume, 1) + ' CBM</span></div>',
-      '<div class="stacked-bar"><div class="stacked-fill ' + volumeTone + '" style="width:' + volumeFill + '%"></div></div>',
-      '<div class="bar-legend"><span>Used capacity</span><span>Remaining planning space: ' + fmt(metrics.wastedSpace, 2) + " CBM</span></div>",
-      "</section>"
+      '<label class="field">',
+      "<span>" + escapeHtml(label) + "</span>",
+      '<input inputmode="' + (inputMode || "decimal") + '" type="number" step="' + (step || "any") + '" min="0" value="' + escapeHtml(line[field]) + '" data-line-field="' + escapeHtml(field) + '" data-error-key="' + escapeHtml(key) + '" aria-label="Line ' + (index + 1) + " " + escapeHtml(label) + '">',
+      '<small class="error" data-error-for="' + escapeHtml(key) + '"></small>',
+      "</label>"
     ].join("");
   }
 
-  function renderDetails(metrics) {
-    var n = metrics.normalized;
-    return [
-      '<div class="detail-grid">',
-      '<div class="detail-row"><span>Canonical dimensions</span><strong>' + fmt(n.lengthM, 3) + " × " + fmt(n.widthM, 3) + " × " + fmt(n.heightM, 3) + " m</strong></div>",
-      '<div class="detail-row"><span>Original input unit</span><strong>' + escapeHtml(n.original.dimensionUnit) + " / " + escapeHtml(n.original.weightUnit) + "</strong></div>",
-      '<div class="detail-row"><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + " m³</strong></div>",
-      '<div class="detail-row"><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg</strong></div>",
-      '<div class="detail-row"><span>Selected container max</span><strong>' + fmt(metrics.container.volume, 1) + " CBM / " + fmtInt(metrics.container.payload) + " kg</strong></div>",
-      '<div class="detail-row"><span>Container interior</span><strong>' + fmt(metrics.container.length, 3) + " × " + fmt(metrics.container.width, 3) + " × " + fmt(metrics.container.height, 3) + " m</strong></div>",
-      "</div>"
+  function renderLines() {
+    var list = document.querySelector("[data-lines-list]");
+    if (!list) return;
+    list.innerHTML = state.lines.map(lineMarkup).join("");
+    bindLineEvents();
+    updateRowSummaries();
+  }
+
+  function collectLinesFromDom() {
+    document.querySelectorAll("[data-line-id]").forEach(function each(lineEl) {
+      var line = getStateLine(lineEl.getAttribute("data-line-id"));
+      if (!line) return;
+      lineEl.querySelectorAll("[data-line-field]").forEach(function eachField(input) {
+        line[input.getAttribute("data-line-field")] = input.value;
+      });
+    });
+    return state.lines.map(function map(line) {
+      return {
+        id: line.id,
+        label: line.label,
+        length: line.length,
+        width: line.width,
+        height: line.height,
+        quantity: line.quantity,
+        weight: line.weight,
+        dimensionUnit: line.dimensionUnit,
+        weightUnit: line.weightUnit,
+        stackable: line.stackable ? "yes" : "no"
+      };
+    });
+  }
+
+  function readInputState() {
+    return {
+      lines: collectLinesFromDom(),
+      containerType: getSelectedContainer()
+    };
+  }
+
+  function convertLineDimensionUnit(lineId, nextUnit) {
+    var line = getStateLine(lineId);
+    if (!line || nextUnit === line.dimensionUnit) return;
+    ["length", "width", "height"].forEach(function each(field) {
+      var value = toNumber(line[field]);
+      if (value > 0) {
+        line[field] = nextUnit === "in" ? round(value / 2.54, 1) : round(value * 2.54, 1);
+      }
+    });
+    line.dimensionUnit = nextUnit;
+    renderLines();
+    if (state.submitted) clearValidErrors();
+  }
+
+  function convertLineWeightUnit(lineId, nextUnit) {
+    var line = getStateLine(lineId);
+    if (!line || nextUnit === line.weightUnit) return;
+    var value = toNumber(line.weight);
+    if (value > 0) {
+      line.weight = nextUnit === "lb" ? round(value * 2.20462, 1) : round(value / 2.20462, 1);
+    }
+    line.weightUnit = nextUnit;
+    renderLines();
+    if (state.submitted) clearValidErrors();
+  }
+
+  function setLineStackable(lineId, value) {
+    var line = getStateLine(lineId);
+    if (!line) return;
+    line.stackable = value === "yes";
+    renderLines();
+    if (state.submitted) clearValidErrors();
+  }
+
+  function bindLineEvents() {
+    document.querySelectorAll("[data-line-id]").forEach(function each(lineEl) {
+      var lineId = lineEl.getAttribute("data-line-id");
+      lineEl.querySelectorAll("[data-line-field]").forEach(function eachInput(input) {
+        input.addEventListener("input", function onInput() {
+          var line = getStateLine(lineId);
+          if (line) line[input.getAttribute("data-line-field")] = input.value;
+          updateRowSummaries();
+          clearValidErrors();
+        });
+      });
+      lineEl.querySelectorAll("[data-line-dim-unit]").forEach(function eachButton(button) {
+        button.addEventListener("click", function onClick() { convertLineDimensionUnit(lineId, button.getAttribute("data-line-dim-unit")); });
+      });
+      lineEl.querySelectorAll("[data-line-weight-unit]").forEach(function eachButton(button) {
+        button.addEventListener("click", function onClick() { convertLineWeightUnit(lineId, button.getAttribute("data-line-weight-unit")); });
+      });
+      lineEl.querySelectorAll("[data-line-stackable]").forEach(function eachButton(button) {
+        button.addEventListener("click", function onClick() { setLineStackable(lineId, button.getAttribute("data-line-stackable")); });
+      });
+    });
+
+    document.querySelectorAll("[data-duplicate-line]").forEach(function each(button) {
+      button.addEventListener("click", function onClick() {
+        duplicateLine(button.getAttribute("data-duplicate-line"));
+      });
+    });
+
+    document.querySelectorAll("[data-remove-line]").forEach(function each(button) {
+      button.addEventListener("click", function onClick() {
+        removeLine(button.getAttribute("data-remove-line"));
+      });
+    });
+  }
+
+  function addLine(data) {
+    collectLinesFromDom();
+    state.lines.push(createLine(data));
+    renderLines();
+  }
+
+  function duplicateLine(lineId) {
+    collectLinesFromDom();
+    var index = state.lines.findIndex(function find(line) { return line.id === lineId; });
+    if (index < 0) return;
+    var copy = createLine(state.lines[index]);
+    copy.label = copy.label ? copy.label + " copy" : "";
+    state.lines.splice(index + 1, 0, copy);
+    renderLines();
+  }
+
+  function removeLine(lineId) {
+    if (state.lines.length <= 1) return;
+    state.lines = state.lines.filter(function filter(line) { return line.id !== lineId; });
+    renderLines();
+    clearValidErrors();
+  }
+
+  function clearLines() {
+    state.lines = [createLine()];
+    state.submitted = false;
+    renderLines();
+    clearErrors();
+    document.getElementById("result-root").innerHTML = '<div class="empty-state" data-empty-state><p class="eyebrow">Live planning dashboard</p><h2>Enter shipment details to check fit.</h2><p>Your result will show container fit, CBM, payload risk, recommended container, and supporting calculation details.</p></div>';
+  }
+
+  function updateContainerCards() {
+    var selected = getSelectedContainer();
+    document.querySelectorAll(".option-card").forEach(function each(card) {
+      var input = card.querySelector("input");
+      card.classList.toggle("is-selected", input.value === selected);
+    });
+  }
+
+  function updateContainerEcho() {
+    var c = CONTAINERS[getSelectedContainer()];
+    var echo = document.querySelector("[data-container-echo]");
+    echo.textContent = c.type + " planning estimate: " + fmt(c.volume, 1) + " CBM, " + fmtInt(c.payload) + " kg payload, interior " + fmt(c.length, 3) + " × " + fmt(c.width, 3) + " × " + fmt(c.height, 3) + " m.";
+    updateRowSummaries();
+  }
+
+  function clearErrors() {
+    document.querySelectorAll(".field").forEach(function each(field) { field.classList.remove("has-error"); });
+    document.querySelectorAll("[data-error-for]").forEach(function each(error) { error.textContent = ""; });
+  }
+
+  function showErrors(errors) {
+    clearErrors();
+    Object.keys(errors).forEach(function each(key) {
+      var field = document.querySelector('[data-error-key="' + key + '"]');
+      var wrapper = field ? field.closest(".field") : null;
+      var error = document.querySelector('[data-error-for="' + key + '"]');
+      if (wrapper) wrapper.classList.add("has-error");
+      if (error) error.textContent = errors[key];
+    });
+    var first = Object.keys(errors)[0];
+    var firstField = first ? document.querySelector('[data-error-key="' + first + '"]') : null;
+    if (firstField) firstField.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function clearValidErrors() {
+    if (!state.submitted) return;
+    var validation = validateInputs(readInputState());
+    document.querySelectorAll("[data-error-for]").forEach(function each(error) {
+      var key = error.getAttribute("data-error-for");
+      if (!validation.errors[key]) {
+        error.textContent = "";
+        var field = document.querySelector('[data-error-key="' + key + '"]');
+        if (field) field.closest(".field").classList.remove("has-error");
+      }
+    });
+  }
+
+  function rowSummaryMarkup(line, container) {
+    var summary = [];
+    var row = normalizeLine(line, 0);
+    if (row.lengthM > 0 && row.widthM > 0 && row.heightM > 0) {
+      summary.push('<span class="live-line">Carton CBM: ' + fmt(row.cartonCbm, 3) + " m³</span>");
+      if (row.quantity > 0) {
+        summary.push('<span class="live-line">Row total CBM: ' + fmt(row.totalCbm, 2) + " m³</span>");
+      }
+      if (hasRowDimensionOverflow(row, container)) {
+        summary.unshift('<span class="tag-pill error">Carton too large for selected container</span>');
+      }
+    }
+    if (row.quantity > 0 && row.weightKg > 0) {
+      summary.push('<span class="live-line">Row weight: ' + fmtInt(row.totalWeightKg) + " kg</span>");
+    }
+    getSanityTagsForLine(row).slice(0, 2).forEach(function each(tag) {
+      summary.push(tagMarkup(tag));
+    });
+    return summary.slice(0, 5).join("");
+  }
+
+  function updateRowSummaries() {
+    if (!root.document || !document.querySelector("[data-lines-list]")) return;
+    var lines = collectLinesFromDom();
+    var container = CONTAINERS[getSelectedContainer()];
+    lines.forEach(function each(line) {
+      var target = document.querySelector('[data-row-summary="' + line.id + '"]');
+      if (target) target.innerHTML = rowSummaryMarkup(line, container);
+    });
+
+    var validation = validateInputs({ lines: lines, containerType: getSelectedContainer() });
+    var live = document.querySelector("[data-shipment-live]");
+    if (!live) return;
+    if (!validation.valid) {
+      live.innerHTML = '<span class="live-line">Add at least one complete shipment line.</span>';
+      return;
+    }
+    var metrics = calculate({ lines: lines, containerType: getSelectedContainer() });
+    live.innerHTML = [
+      '<span class="live-line">Total CBM: ' + fmt(metrics.totalCbm, 2) + " m³</span>",
+      '<span class="live-line">Total weight: ' + fmtInt(metrics.totalWeightKg) + " kg</span>",
+      '<span class="live-line">Cartons: ' + fmtInt(metrics.totalCartons) + "</span>"
     ].join("");
   }
 
@@ -617,31 +960,21 @@
   }
 
   function fillExample() {
-    state.dimensionUnit = "cm";
-    state.weightUnit = "kg";
-    state.stackable = true;
-    setSegments("[data-dim-unit]", "cm", "data-dim-unit");
-    setSegments("[data-weight-unit]", "kg", "data-weight-unit");
-    setSegments("[data-stackable]", "yes", "data-stackable");
-    setField("length", 60);
-    setField("width", 40);
-    setField("height", 30);
-    setField("quantity", 500);
-    setField("weight", 12);
+    state.nextLineId = 1;
+    state.lines = [
+      createLine({ label: "Furniture cartons", length: 90, width: 60, height: 50, quantity: 120, weight: 18, dimensionUnit: "cm", weightUnit: "kg", stackable: "yes" }),
+      createLine({ label: "Accessories cartons", length: 45, width: 35, height: 30, quantity: 260, weight: 7, dimensionUnit: "cm", weightUnit: "kg", stackable: "yes" }),
+      createLine({ label: "Tile cartons", length: 40, width: 40, height: 20, quantity: 400, weight: 23, dimensionUnit: "cm", weightUnit: "kg", stackable: "yes" })
+    ];
+    renderLines();
     setContainer("40GP");
     clearErrors();
-    updateLiveHints();
   }
-
-  var state = {
-    dimensionUnit: "cm",
-    weightUnit: "kg",
-    stackable: true,
-    submitted: false
-  };
 
   function initApp() {
     if (!root.document || !document.getElementById("calculator-form")) return;
+
+    state.lines = [createLine()];
 
     if (localStorage.getItem("cbm_guide_dismissed") === "true") {
       document.querySelector("[data-guide-card]").classList.add("is-hidden");
@@ -653,22 +986,8 @@
     });
 
     document.querySelector("[data-example]").addEventListener("click", fillExample);
-
-    document.querySelectorAll("[data-dim-unit]").forEach(function each(button) {
-      button.addEventListener("click", function onClick() { convertDimensionUnit(button.getAttribute("data-dim-unit")); });
-    });
-
-    document.querySelectorAll("[data-weight-unit]").forEach(function each(button) {
-      button.addEventListener("click", function onClick() { convertWeightUnit(button.getAttribute("data-weight-unit")); });
-    });
-
-    document.querySelectorAll("[data-stackable]").forEach(function each(button) {
-      button.addEventListener("click", function onClick() {
-        state.stackable = button.getAttribute("data-stackable") === "yes";
-        setSegments("[data-stackable]", button.getAttribute("data-stackable"), "data-stackable");
-        updateLiveHints();
-      });
-    });
+    document.querySelector("[data-add-line]").addEventListener("click", function onClick() { addLine(); });
+    document.querySelector("[data-clear-lines]").addEventListener("click", clearLines);
 
     document.querySelectorAll('input[name="containerType"]').forEach(function each(input) {
       input.addEventListener("change", function onChange() {
@@ -677,14 +996,8 @@
       });
     });
 
-    ["length", "width", "height", "quantity", "weight"].forEach(function each(field) {
-      getField(field).addEventListener("input", function onInput() {
-        updateLiveHints();
-        clearValidErrors();
-      });
-    });
-
     document.getElementById("calculator-form").addEventListener("submit", handleSubmit);
+    renderLines();
     updateContainerEcho();
   }
 

@@ -28,7 +28,12 @@ const requiredCopy = [
   "Oversized cartons: confirm stackability",
   "Bulky cargo: space may fill before weight",
   "Weight and space look balanced",
-  "Dense cargo: payload may become the limit"
+  "Dense cargo: payload may become the limit",
+  "Shipment lines",
+  "Total cartons",
+  "Largest space contributor",
+  "Largest weight contributor",
+  "Row total CBM"
 ];
 
 let failures = 0;

@@ -315,6 +315,12 @@ h1 {
   gap: 10px;
 }
 
+.field-group {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
 .line-unit-row,
 .line-stack-row {
   display: flex;
@@ -324,6 +330,10 @@ h1 {
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
+}
+
+.compact-unit-row {
+  margin-top: 4px;
 }
 
 .line-stack-row .segmented,
@@ -690,20 +700,6 @@ input:focus {
   font-size: 16px;
 }
 
-.utilization-copy {
-  display: grid;
-  gap: 4px;
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
-.utilization-copy strong {
-  color: var(--ink);
-  font-size: 13px;
-}
-
 .circle-meter {
   width: 88px;
   height: 88px;
@@ -736,7 +732,7 @@ input:focus {
 
 .summary-stack {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   margin-top: 8px;
 }
 
@@ -746,19 +742,21 @@ input:focus {
 
 .summary-stack div {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
   gap: 10px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .summary-stack strong {
   color: var(--ink);
+  font-size: 18px;
+  line-height: 1.15;
 }
 
-.primary-summary div:first-child strong,
-.primary-summary div:nth-child(2) strong {
-  font-size: 18px;
+.primary-summary div:first-child strong {
+  font-size: 22px;
 }
 
 .chart-card {
@@ -769,7 +767,7 @@ input:focus {
 .contributor-list {
   display: grid;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: 10px;
   border-top: 1px solid #eef2f6;
   padding-top: 10px;
 }
@@ -828,6 +826,72 @@ input:focus {
   margin-top: 8px;
   color: var(--muted);
   font-size: 12px;
+}
+
+.capacity-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.capacity-figures div {
+  display: grid;
+  gap: 2px;
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: 8px;
+}
+
+.capacity-figures span,
+.capacity-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.capacity-figures strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.capacity-figures strong.warning {
+  color: #ad4e00;
+}
+
+.capacity-figures strong.error {
+  color: #b42318;
+}
+
+.capacity-note {
+  margin: 8px 0 0;
+}
+
+.planning-notes {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+  border-top: 1px solid #eef2f6;
+  padding-top: 12px;
+}
+
+.planning-notes h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.planning-notes p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .supporting-details {
@@ -976,6 +1040,11 @@ input:focus {
     flex-direction: column;
   }
 
+  .compact-unit-row {
+    align-items: center;
+    flex-direction: row;
+  }
+
   .line-unit-row .segmented,
   .line-stack-row .segmented {
     width: 100%;
@@ -985,5 +1054,9 @@ input:focus {
   .chart-card,
   .supporting-details {
     padding: 12px;
+  }
+
+  .capacity-figures {
+    grid-template-columns: 1fr;
   }
 }

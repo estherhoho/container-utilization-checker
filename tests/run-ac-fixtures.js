@@ -49,7 +49,7 @@ const fixtures = [
   {
     id: "AC-Unit-1",
     input: { length: 24, width: 16, height: 12, quantity: 100, weight: 26, dimensionUnit: "in", weightUnit: "lb", containerType: "40GP", stackable: "yes" },
-    expect: { cartonCbm: 0.075, totalCbm: 7.55, totalWeightKg: 1179, rules: ["R1"], actionIncludes: ["Small shipment", "LCL likely cheaper"] }
+    expect: { cartonCbm: 0.075, totalCbm: 7.55, totalWeightKg: 1179, rules: ["R1"], actionIncludes: ["Under 13 CBM", "LCL may be cheaper"] }
   },
   {
     id: "AC-Multi-1",

@@ -20,8 +20,11 @@ const removedCopy = [
 ];
 
 const requiredCopy = [
-  "Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.",
-  "Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.",
+  "Capacity uses typical container planning values:",
+  "LCL candidate is flagged only when the shipment is under 13 CBM and 3,500 kg.",
+  "Used",
+  "Max",
+  "Remaining",
   "Total gross weight",
   "Likely limiting factor:",
   "Recommended:",
@@ -31,6 +34,7 @@ const requiredCopy = [
   "Dense cargo: payload may become the limit",
   "Shipment lines",
   "Total cartons",
+  "Planning notes",
   "Largest space contributor",
   "Largest weight contributor",
   "Row total CBM"

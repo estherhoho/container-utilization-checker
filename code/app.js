@@ -10,7 +10,7 @@
   var ORDERED_CONTAINERS = ["20GP", "40GP", "40HQ"];
   var RULE_PRIORITY = ["R13", "R7", "R11", "R6", "R10", "R14", "R8", "R9", "R1", "R2", "R12", "R3", "R5", "R4"];
   var RULE_MESSAGES = {
-    R1: "Shipment is small for FCL. LCL is often cheaper — ask your forwarder.",
+    R1: "Likely LCL candidate: under 13 CBM and 3,500 kg. Ask your forwarder to compare LCL vs FCL.",
     R2: "Container is oversized. Consolidate or downsize.",
     R3: "Under-utilized. Consider smaller container or add SKUs.",
     R4: "Healthy planning range.",
@@ -410,10 +410,10 @@
 
     if (visibleRules.indexOf("R1") >= 0) {
       return {
-        badge: "Small Shipment",
+        badge: "LCL Candidate",
         tone: "warning",
-        headline: "Small shipment for FCL.",
-        action: "Small shipment — LCL likely cheaper."
+        headline: "Likely LCL candidate for FCL.",
+        action: "Under 13 CBM and 3,500 kg — LCL may be cheaper than booking a full container."
       };
     }
 
@@ -555,20 +555,34 @@
     ].join("");
   }
 
+  function renderCapacityFigures(kind, used, max, unit, tone) {
+    var remaining = Math.max(max - used, 0);
+    var usedText = unit === "kg" ? fmtInt(used) : fmt(used, 2);
+    var maxText = unit === "kg" ? fmtInt(max) : fmt(max, 1);
+    var remainingText = unit === "kg" ? fmtInt(remaining) : fmt(remaining, 2);
+    return [
+      '<div class="capacity-figures">',
+      '<div><span>Used</span><strong>' + usedText + " " + unit + "</strong></div>",
+      '<div><span>Max</span><strong>' + maxText + " " + unit + "</strong></div>",
+      '<div><span>Remaining</span><strong class="' + tone + '">' + remainingText + " " + unit + "</strong></div>",
+      "</div>",
+      '<p class="capacity-note">' + escapeHtml(kind) + " utilization uses the selected container's planning capacity.</p>"
+    ].join("");
+  }
+
   function renderMetricGrid(metrics, utilizationSuppressed) {
     var fitStatus = metrics.verdict.badge;
     var rec = metrics.targetRecommendedContainer || metrics.recommendedContainer || "Split shipment";
-    var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
     var recommendedMarkup = '<div class="recommendation-chip"><span>Recommended:</span><strong>' + escapeHtml(rec) + "</strong></div>";
     var limitingFactor = metrics.payloadUtil > metrics.volumeUtil ? "weight" : "space";
-    var volumeFormula = '<div class="utilization-copy"><span>Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.</span><strong>' + fmt(metrics.totalCbm, 2) + " CBM / " + fmt(metrics.container.volume, 1) + " CBM</strong></div>";
-    var payloadFormula = '<div class="utilization-copy"><span>Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</strong></div>";
+    var volumeTone = metrics.volumeBand === "over" || metrics.volumeBand === "critical" ? "error" : metrics.volumeBand === "tight" ? "warning" : "";
+    var payloadTone = metrics.payloadBand === "over" || metrics.payloadBand === "critical" ? "error" : metrics.payloadBand === "tight" ? "warning" : "";
     return [
       '<section class="metric-grid" aria-label="Container result metrics">',
-      '<div class="metric-card summary-card"><div class="metric-head"><p class="metric-label">CBM Summary</p></div><div class="summary-stack primary-summary"><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + ' kg</strong></div><div><span>Total cartons</span><strong>' + fmtInt(metrics.totalCartons) + '</strong></div><div><span>Shipment lines</span><strong>' + fmtInt(metrics.lineCount) + "</strong></div></div>" + renderContributorInsights(metrics) + "</div>",
+      '<div class="metric-card summary-card"><div class="metric-head"><p class="metric-label">CBM Summary</p></div><div class="summary-stack primary-summary"><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + ' kg</strong></div><div><span>Total cartons</span><strong>' + fmtInt(metrics.totalCartons) + '</strong></div><div><span>Shipment lines</span><strong>' + fmtInt(metrics.lineCount) + "</strong></div></div></div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Likely limiting factor: ' + escapeHtml(limitingFactor) + "</div>" + recommendedMarkup + "</div>",
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">Space use: ' + escapeHtml(metrics.volumeBand) + "</div>" + volumeFormula) + tags + "</div>",
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">Weight use: ' + escapeHtml(metrics.payloadBand) + "</div>" + payloadFormula + "</div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">Space use: ' + escapeHtml(metrics.volumeBand) + "</div>" + renderCapacityFigures("Volume", metrics.totalCbm, metrics.container.volume, "CBM", volumeTone)) + "</div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">Weight use: ' + escapeHtml(metrics.payloadBand) + "</div>" + renderCapacityFigures("Payload", metrics.totalWeightKg, metrics.container.payload, "kg", payloadTone) + "</div>",
       "</section>"
     ].join("");
   }
@@ -583,26 +597,22 @@
     ].join("");
   }
 
-  function renderDetails(metrics) {
-    var lineRows = metrics.rows.map(function map(row) {
-      return '<div class="detail-row"><span>' + escapeHtml(row.label) + '</span><strong>' + fmt(row.cartonCbm, 3) + " CBM each · " + fmt(row.totalCbm, 2) + " CBM · " + fmtInt(row.totalWeightKg) + " kg</strong></div>";
-    }).join("");
+  function renderPlanningNotes(metrics) {
+    var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
     return [
-      '<div class="detail-grid">',
-      '<div class="detail-row"><span>Shipment lines counted</span><strong>' + fmtInt(metrics.lineCount) + "</strong></div>",
-      '<div class="detail-row"><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + " m³</strong></div>",
-      '<div class="detail-row"><span>Total gross weight</span><strong>' + fmtInt(metrics.totalWeightKg) + " kg</strong></div>",
-      '<div class="detail-row"><span>Selected container max</span><strong>' + fmt(metrics.container.volume, 1) + " CBM / " + fmtInt(metrics.container.payload) + " kg</strong></div>",
-      '<div class="detail-row"><span>Container interior</span><strong>' + fmt(metrics.container.length, 3) + " × " + fmt(metrics.container.width, 3) + " × " + fmt(metrics.container.height, 3) + " m</strong></div>",
-      lineRows,
-      "</div>"
+      '<section class="planning-notes" aria-label="Planning notes">',
+      '<h3>Planning notes</h3>',
+      '<p>Capacity uses typical container planning values: ' + fmt(metrics.container.volume, 1) + " CBM and " + fmtInt(metrics.container.payload) + " kg payload for " + escapeHtml(metrics.container.type) + ".</p>",
+      '<p>LCL candidate is flagged only when the shipment is under 13 CBM and 3,500 kg.</p>',
+      tags ? '<div class="note-tags">' + tags + "</div>" : "",
+      renderContributorInsights(metrics),
+      "</section>"
     ].join("");
   }
 
   function renderResult(metrics) {
     var rootEl = document.getElementById("result-root");
     var utilizationSuppressed = metrics.visibleRules.some(function some(rule) { return rule.id === "R13"; });
-    var detailsOpen = window.matchMedia("(min-width: 768px)").matches ? " open" : "";
     var volumeFill = Math.min(metrics.volumeUtil, 100);
     var volumeTone = metrics.volumeBand === "over" || metrics.volumeBand === "critical" ? "error" : metrics.volumeBand === "tight" ? "warning" : "";
     rootEl.innerHTML = [
@@ -616,7 +626,7 @@
       "</section>",
       renderMetricGrid(metrics, utilizationSuppressed),
       utilizationSuppressed ? '<section class="chart-card"><p class="support-note">Utilization cannot be calculated — at least one carton dimension exceeds container interior.</p></section>' : renderChart(metrics, volumeFill, volumeTone),
-      '<details class="supporting-details"' + detailsOpen + '><summary>Show calculation details</summary>' + renderDetails(metrics) + "</details>",
+      renderPlanningNotes(metrics),
       '<p class="methodology">Container volumes and payload limits used in this tool are typical planning values from carrier equipment guides. They are not loading guarantees. Internal dimensions vary by carrier and container age.</p>',
       "</div>",
       "</article>"
@@ -698,7 +708,7 @@
       '<p class="helper">Outer dimensions of the carton in cm or inch.</p>',
       '<div class="line-grid quantity-weight">',
       lineFieldMarkup(line, "quantity", "Carton quantity", index, "numeric", "1"),
-      '<div class="field-group"><div class="line-unit-row"><span>Weight unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' weight unit"><button type="button" class="segment' + weightKgActive + '" data-line-weight-unit="kg">kg</button><button type="button" class="segment' + weightLbActive + '" data-line-weight-unit="lb">lb</button></div></div>' + lineFieldMarkup(line, "weight", "Gross weight per carton", index) + '<small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small></div>',
+      '<div class="field-group weight-field-group">' + lineFieldMarkup(line, "weight", "Gross weight per carton", index) + '<small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small><div class="line-unit-row compact-unit-row"><span>Weight unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' weight unit"><button type="button" class="segment' + weightKgActive + '" data-line-weight-unit="kg">kg</button><button type="button" class="segment' + weightLbActive + '" data-line-weight-unit="lb">lb</button></div></div></div>',
       "</div>",
       '<div class="row-summary" data-row-summary="' + escapeHtml(line.id) + '"></div>',
       "</article>"

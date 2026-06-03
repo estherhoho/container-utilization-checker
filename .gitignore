@@ -3,3 +3,4 @@ node_modules/
 .vercel/
 work/chrome-profile/
 npm-debug.log*
+.vercel

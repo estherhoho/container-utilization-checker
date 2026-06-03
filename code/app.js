@@ -198,17 +198,17 @@
     if (longestCm >= 40 && longestCm <= 70 && cartonCbm >= 0.04 && cartonCbm <= 0.1) {
       tags.push({ text: "✓ Standard FBA carton", tone: "success" });
     } else if (longestCm > 100 || cartonCbm > 0.4) {
-      tags.push({ text: "Large carton", tone: "warning" });
+      tags.push({ text: "Oversized cartons: confirm stackability", tone: "warning" });
     } else if (longestCm < 30 && cartonCbm < 0.02) {
       tags.push({ text: "Compact carton", tone: "info" });
     }
 
     if (density < 100) {
-      tags.push({ text: "Light cargo (low density)", tone: "info" });
+      tags.push({ text: "Bulky cargo: space may fill before weight", tone: "info" });
     } else if (density <= 500) {
-      tags.push({ text: "Medium density", tone: "success" });
+      tags.push({ text: "Weight and space look balanced", tone: "success" });
     } else {
-      tags.push({ text: "Dense / heavy cargo — payload may bind", tone: "error" });
+      tags.push({ text: "Dense cargo: payload may become the limit", tone: "error" });
     }
 
     return tags;

@@ -13,7 +13,10 @@ const removedCopy = [
   "Generate Supplier Email Draft",
   "Download Utilization Report",
   "v1.1 placeholders",
-  "metric-icon"
+  "metric-icon",
+  "Large carton",
+  "Light cargo",
+  "Medium density"
 ];
 
 const requiredCopy = [
@@ -21,7 +24,11 @@ const requiredCopy = [
   "Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.",
   "Total gross weight",
   "Likely limiting factor:",
-  "Recommended:"
+  "Recommended:",
+  "Oversized cartons: confirm stackability",
+  "Bulky cargo: space may fill before weight",
+  "Weight and space look balanced",
+  "Dense cargo: payload may become the limit"
 ];
 
 let failures = 0;

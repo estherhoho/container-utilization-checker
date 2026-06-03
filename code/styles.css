@@ -509,20 +509,8 @@ input:focus {
 .metric-head {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 8px;
-  min-height: 34px;
-}
-
-.metric-icon {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: var(--teal-soft);
-  color: var(--teal-dark);
-  font-weight: 900;
+  min-height: 20px;
 }
 
 .metric-value {
@@ -557,7 +545,7 @@ input:focus {
   font-size: 16px;
 }
 
-.payload-formula {
+.utilization-copy {
   display: grid;
   gap: 4px;
   margin-top: 8px;
@@ -566,7 +554,7 @@ input:focus {
   line-height: 1.35;
 }
 
-.payload-formula strong {
+.utilization-copy strong {
   color: var(--ink);
   font-size: 13px;
 }
@@ -607,6 +595,10 @@ input:focus {
   margin-top: 8px;
 }
 
+.summary-card .summary-stack {
+  margin-top: 12px;
+}
+
 .summary-stack div {
   display: flex;
   justify-content: space-between;
@@ -617,6 +609,11 @@ input:focus {
 
 .summary-stack strong {
   color: var(--ink);
+}
+
+.primary-summary div:first-child strong,
+.primary-summary div:nth-child(2) strong {
+  font-size: 18px;
 }
 
 .chart-card {

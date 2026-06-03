@@ -12,11 +12,15 @@ const removedCopy = [
   "What to do next",
   "Generate Supplier Email Draft",
   "Download Utilization Report",
-  "v1.1 placeholders"
+  "v1.1 placeholders",
+  "metric-icon"
 ];
 
 const requiredCopy = [
-  "Payload utilization = total gross weight / selected container max payload",
+  "Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.",
+  "Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.",
+  "Total gross weight",
+  "Likely limiting factor:",
   "Recommended:"
 ];
 
@@ -39,5 +43,26 @@ requiredCopy.forEach((text) => {
     console.log(`FAIL required copy missing: ${text}`);
   }
 });
+
+const orderedCopy = [
+  "CBM Summary",
+  "Container Fit",
+  "Volume Utilization",
+  "Payload Utilization"
+];
+
+orderedCopy.reduce((previousIndex, text) => {
+  const currentIndex = runnableCode.indexOf(text);
+  if (currentIndex === -1) {
+    failures += 1;
+    console.log(`FAIL hierarchy copy missing: ${text}`);
+  } else if (currentIndex <= previousIndex) {
+    failures += 1;
+    console.log(`FAIL hierarchy order wrong at: ${text}`);
+  } else {
+    console.log(`PASS hierarchy order includes: ${text}`);
+  }
+  return currentIndex;
+}, -1);
 
 if (failures) process.exit(1);

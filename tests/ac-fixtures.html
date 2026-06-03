@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AC Fixture Harness</title>
+    <style>
+      body { margin: 0; padding: 24px; font-family: system-ui, sans-serif; background: #f7fafc; color: #1f2933; }
+      h1 { margin: 0 0 8px; }
+      table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #d9e2ec; }
+      th, td { padding: 10px; border-bottom: 1px solid #eef2f6; text-align: left; vertical-align: top; }
+      th { color: #0d9e8a; font-size: 12px; text-transform: uppercase; }
+      .PASS { color: #027a48; font-weight: 800; }
+      .FAIL { color: #b42318; font-weight: 800; }
+    </style>
+  </head>
+  <body>
+    <h1>PRD v0.2 Acceptance Fixture Harness</h1>
+    <p id="summary">Running...</p>
+    <table>
+      <thead><tr><th>Fixture</th><th>Status</th><th>Detail</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <script src="../code/app.js"></script>
+    <script>
+      const fixtures = [
+        ["AC-A1", { length: 60, width: 40, height: 30, quantity: 500, weight: 12, dimensionUnit: "cm", weightUnit: "kg", containerType: "20GP", stackable: "yes" }, ["R7", "R8"]],
+        ["AC-A2", { length: 50, width: 40, height: 40, quantity: 200, weight: 18, dimensionUnit: "cm", weightUnit: "kg", containerType: "20GP", stackable: "yes" }, ["R2"]],
+        ["AC-A3", { length: 60, width: 40, height: 40, quantity: 1000, weight: 22, dimensionUnit: "cm", weightUnit: "kg", containerType: "40HQ", stackable: "yes" }, ["R7"]],
+        ["AC-B1", { length: 50, width: 30, height: 40, quantity: 800, weight: 8, dimensionUnit: "cm", weightUnit: "kg", containerType: "40HQ", stackable: "yes" }, ["R4"]],
+        ["AC-B2", { length: 200, width: 80, height: 50, quantity: 100, weight: 45, dimensionUnit: "cm", weightUnit: "kg", containerType: "40HQ", stackable: "no" }, ["R7", "R12"]],
+        ["AC-C1", { length: 100, width: 80, height: 60, quantity: 50, weight: 280, dimensionUnit: "cm", weightUnit: "kg", containerType: "20GP", stackable: "yes" }, ["R4"]],
+        ["AC-C2", { length: 120, width: 100, height: 60, quantity: 20, weight: 1200, dimensionUnit: "cm", weightUnit: "kg", containerType: "20GP", stackable: "no" }, ["R10", "R12", "R14"]],
+        ["AC-Validation-1", { length: 0, width: 40, height: 30, quantity: 500, weight: 12, dimensionUnit: "cm", weightUnit: "kg", containerType: "20GP", stackable: "yes" }, []],
+        ["AC-Validation-2", { length: 1300, width: 240, height: 250, quantity: 1, weight: 100, dimensionUnit: "cm", weightUnit: "kg", containerType: "40GP", stackable: "yes" }, ["R13"]],
+        ["AC-Unit-1", { length: 24, width: 16, height: 12, quantity: 100, weight: 26, dimensionUnit: "in", weightUnit: "lb", containerType: "40GP", stackable: "yes" }, ["R1"]]
+      ];
+
+      const rows = document.getElementById("rows");
+      let passed = 0;
+      fixtures.forEach(([id, input, expectedRules]) => {
+        const result = window.CBMTool.calculate(input);
+        let ok = true;
+        let detail = "";
+        if (!result.valid) {
+          ok = id === "AC-Validation-1";
+          detail = result.errors.length || "invalid";
+        } else {
+          const visible = result.visibleRules.map((rule) => rule.id);
+          ok = expectedRules.every((rule) => visible.includes(rule));
+          detail = `${window.CBMTool.fmt(result.totalCbm, 2)} CBM, ${window.CBMTool.fmtInt(result.totalWeightKg)} kg, rules: ${visible.join("/")}, action: ${result.verdict.action}`;
+        }
+        if (ok) passed += 1;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${id}</td><td class="${ok ? "PASS" : "FAIL"}">${ok ? "PASS" : "FAIL"}</td><td>${detail}</td>`;
+        rows.appendChild(tr);
+      });
+      document.getElementById("summary").textContent = `${passed}/${fixtures.length} fixtures passed`;
+    </script>
+  </body>
+</html>

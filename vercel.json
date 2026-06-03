@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/", "dest": "/code/index.html" },
+    { "src": "/styles.css", "dest": "/code/styles.css" },
+    { "src": "/app.js", "dest": "/code/app.js" },
+    { "src": "/tests/ac-fixtures.html", "dest": "/tests/ac-fixtures.html" },
+    { "src": "/(.*)", "dest": "/code/$1" }
+  ]
+}

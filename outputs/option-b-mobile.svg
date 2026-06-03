@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="375" height="812" viewBox="0 0 375 812">
+<rect width="375" height="812" fill="#FFFFFF"/>
+<rect x="0" y="0" width="375" height="48" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="0"/>
+<text x="20" y="29" font-family="Arial, sans-serif" font-size="16" fill="#2563EB" font-weight="bold" text-anchor="start">DockToAI</text>
+<line x1="339" y1="18" x2="359" y2="18" stroke="#333333" stroke-width="2"/>
+<line x1="339" y1="24" x2="359" y2="24" stroke="#333333" stroke-width="2"/>
+<line x1="339" y1="30" x2="359" y2="30" stroke="#333333" stroke-width="2"/>
+<rect x="8" y="56" width="359" height="228" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="8"/>
+<text x="20" y="84" font-family="Arial, sans-serif" font-size="14" fill="#333333" font-weight="bold" text-anchor="start">Container Calculator</text>
+<text x="20" y="106" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="bold" text-anchor="start">CARTON DIMENSIONS</text>
+<rect x="20" y="122" width="78" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="28" y="142" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">L</text>
+<rect x="110" y="122" width="78" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="118" y="142" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">W</text>
+<rect x="200" y="122" width="78" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="208" y="142" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">H</text>
+<rect x="294" y="124" width="68" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="296" y="126" width="32" height="28" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="312" y="144" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">cm</text>
+<rect x="328" y="126" width="32" height="28" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="344" y="144" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">in</text>
+<rect x="20" y="172" width="156" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="28" y="192" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Qty</text>
+<rect x="184" y="172" width="100" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="192" y="192" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Weight</text>
+<rect x="292" y="174" width="60" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="294" y="176" width="28" height="28" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="308" y="194" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">kg</text>
+<rect x="322" y="176" width="28" height="28" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="336" y="194" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">lb</text>
+<rect x="20" y="220" width="180" height="32" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="28" y="240" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">40GP  ▾</text>
+<rect x="210" y="222" width="92" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="212" y="224" width="44" height="28" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="234" y="242" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">Yes</text>
+<rect x="256" y="224" width="44" height="28" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="278" y="242" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">No</text>
+<rect x="20" y="266" width="335" height="38" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="6"/>
+<text x="187" y="290" font-family="Arial, sans-serif" font-size="13" fill="#FFFFFF" font-weight="bold" text-anchor="middle">Calculate</text>
+<text x="16" y="310" font-family="Arial, sans-serif" font-size="14" fill="#333333" font-weight="bold" text-anchor="start">Results</text>
+<rect x="8" y="324" width="176" height="60" fill="#FFFFFF" stroke="#16A34A" stroke-width="1" rx="8"/>
+<text x="96" y="360" font-family="Arial, sans-serif" font-size="15" fill="#16A34A" font-weight="bold" text-anchor="middle">✓ FITS</text>
+<rect x="192" y="324" width="176" height="60" fill="#FFFFFF" stroke="#2563EB" stroke-width="1" rx="8"/>
+<text x="280" y="360" font-family="Arial, sans-serif" font-size="15" fill="#2563EB" font-weight="bold" text-anchor="middle">40GP</text>
+<rect x="8" y="394" width="176" height="60" fill="#FFFFFF" stroke="#2563EB" stroke-width="1" rx="8"/>
+<text x="96" y="430" font-family="Arial, sans-serif" font-size="15" fill="#2563EB" font-weight="bold" text-anchor="middle">Vol 72%</text>
+<rect x="192" y="394" width="176" height="60" fill="#FFFFFF" stroke="#EA580C" stroke-width="1" rx="8"/>
+<text x="280" y="430" font-family="Arial, sans-serif" font-size="15" fill="#EA580C" font-weight="bold" text-anchor="middle">Wt 22%</text>
+<text x="16" y="486" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">Volume</text>
+<rect x="72" y="474" width="263" height="18" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<rect x="72" y="474" width="189" height="18" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="4"/>
+<text x="341" y="487" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">72.1%</text>
+<text x="16" y="516" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">Payload</text>
+<rect x="72" y="504" width="263" height="18" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<rect x="72" y="504" width="57" height="18" fill="#EA580C" stroke="#EA580C" stroke-width="1" rx="4"/>
+<text x="341" y="517" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">22.0%</text>
+<rect x="8" y="538" width="359" height="30" fill="#DBEAFE" stroke="#2563EB" stroke-width="1" rx="4"/>
+<text x="16" y="557" font-family="Arial, sans-serif" font-size="11" fill="#2563EB" font-weight="bold" text-anchor="start">Healthy planning range.</text>
+<rect x="8" y="578" width="359" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="20" y="598" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Show supporting details  ▼</text>
+<text x="365" y="804" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF" font-weight="normal" text-anchor="end">Option B — Mobile  375×812</text>
+</svg>

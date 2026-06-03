@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+<rect width="1280" height="800" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1280" height="56" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="0"/>
+<text x="20" y="33" font-family="Arial, sans-serif" font-size="16" fill="#2563EB" font-weight="bold" text-anchor="start">DockToAI</text>
+<text x="1020" y="33" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" font-weight="normal" text-anchor="start">Features</text>
+<text x="1084" y="33" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" font-weight="normal" text-anchor="start">Pricing</text>
+<text x="1148" y="33" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" font-weight="normal" text-anchor="start">Contact</text>
+<text x="1212" y="33" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" font-weight="normal" text-anchor="start">Login</text>
+<rect x="0" y="56" width="400" height="744" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="0"/>
+<line x1="400" y1="56" x2="400" y2="800" stroke="#E5E7EB" stroke-width="1"/>
+<text x="24" y="96" font-family="Arial, sans-serif" font-size="18" fill="#333333" font-weight="bold" text-anchor="start">Container Calculator</text>
+<text x="24" y="122" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="bold" text-anchor="start">CARTON DIMENSIONS</text>
+<rect x="24" y="140" width="96" height="34" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="32" y="161" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Length</text>
+<rect x="132" y="140" width="96" height="34" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="140" y="161" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Width</text>
+<rect x="240" y="140" width="96" height="34" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="248" y="161" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Height</text>
+<rect x="354" y="143" width="76" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="356" y="145" width="36" height="28" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="374" y="163" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">cm</text>
+<rect x="392" y="145" width="36" height="28" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="410" y="163" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">in</text>
+<text x="24" y="194" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="bold" text-anchor="start">QUANTITY & WEIGHT</text>
+<rect x="24" y="212" width="160" height="34" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="32" y="233" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Quantity</text>
+<rect x="196" y="212" width="150" height="34" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<text x="204" y="233" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Weight</text>
+<rect x="358" y="215" width="60" height="32" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="360" y="217" width="28" height="28" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="374" y="235" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">kg</text>
+<rect x="388" y="217" width="28" height="28" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="402" y="235" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">lb</text>
+<text x="24" y="266" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="bold" text-anchor="start">CONTAINER TYPE</text>
+<rect x="24" y="284" width="106" height="54" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="8"/>
+<text x="77" y="306" font-family="Arial, sans-serif" font-size="13" fill="#333333" font-weight="normal" text-anchor="middle">20GP</text>
+<text x="77" y="324" font-family="Arial, sans-serif" font-size="12" fill="#888888" font-weight="normal" text-anchor="middle">○</text>
+<rect x="140" y="284" width="106" height="54" fill="#DBEAFE" stroke="#2563EB" stroke-width="1" rx="8"/>
+<text x="193" y="306" font-family="Arial, sans-serif" font-size="13" fill="#2563EB" font-weight="bold" text-anchor="middle">40GP</text>
+<text x="193" y="324" font-family="Arial, sans-serif" font-size="12" fill="#2563EB" font-weight="normal" text-anchor="middle">●</text>
+<rect x="256" y="284" width="106" height="54" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="8"/>
+<text x="309" y="306" font-family="Arial, sans-serif" font-size="13" fill="#333333" font-weight="normal" text-anchor="middle">40HQ</text>
+<text x="309" y="324" font-family="Arial, sans-serif" font-size="12" fill="#888888" font-weight="normal" text-anchor="middle">○</text>
+<text x="24" y="372" font-family="Arial, sans-serif" font-size="12" fill="#888888" font-weight="normal" text-anchor="start">Stackable:</text>
+<rect x="104" y="354" width="100" height="36" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="16"/>
+<rect x="106" y="356" width="48" height="32" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="14"/>
+<text x="130" y="376" font-family="Arial, sans-serif" font-size="11" fill="#FFFFFF" font-weight="bold" text-anchor="middle">Yes</text>
+<rect x="154" y="356" width="48" height="32" fill="transparent" stroke="transparent" stroke-width="1" rx="14"/>
+<text x="178" y="376" font-family="Arial, sans-serif" font-size="11" fill="#6B7280" font-weight="normal" text-anchor="middle">No</text>
+<rect x="24" y="406" width="352" height="44" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="6"/>
+<text x="200" y="433" font-family="Arial, sans-serif" font-size="13" fill="#FFFFFF" font-weight="bold" text-anchor="middle">Calculate</text>
+<rect x="400" y="56" width="880" height="744" fill="#F8FAFC" stroke="none" stroke-width="1" rx="0"/>
+<text x="428" y="96" font-family="Arial, sans-serif" font-size="18" fill="#333333" font-weight="bold" text-anchor="start">Results</text>
+<rect x="428" y="122" width="266" height="80" fill="#FFFFFF" stroke="#16A34A" stroke-width="1" rx="8"/>
+<text x="438" y="140" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">Verdict</text>
+<text x="438" y="168" font-family="Arial, sans-serif" font-size="18" fill="#16A34A" font-weight="bold" text-anchor="start">✓ FITS</text>
+<text x="438" y="188" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">40GP Recommended</text>
+<rect x="706" y="122" width="266" height="80" fill="#FFFFFF" stroke="#2563EB" stroke-width="1" rx="8"/>
+<text x="716" y="140" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">Volume</text>
+<text x="716" y="168" font-family="Arial, sans-serif" font-size="18" fill="#2563EB" font-weight="bold" text-anchor="start">72.1%</text>
+<text x="716" y="188" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Healthy</text>
+<rect x="984" y="122" width="266" height="80" fill="#FFFFFF" stroke="#EA580C" stroke-width="1" rx="8"/>
+<text x="994" y="140" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">Payload</text>
+<text x="994" y="168" font-family="Arial, sans-serif" font-size="18" fill="#EA580C" font-weight="bold" text-anchor="start">22.0%</text>
+<text x="994" y="188" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">OK</text>
+<text x="428" y="218" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="bold" text-anchor="start">UTILIZATION</text>
+<text x="428" y="250" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Volume</text>
+<rect x="508" y="236" width="740" height="20" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<rect x="508" y="236" width="532" height="20" fill="#2563EB" stroke="#2563EB" stroke-width="1" rx="4"/>
+<text x="1254" y="250" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">72.1%</text>
+<text x="428" y="286" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Payload</text>
+<rect x="508" y="272" width="740" height="20" fill="#F0F0F0" stroke="#CCCCCC" stroke-width="1" rx="4"/>
+<rect x="508" y="272" width="162" height="20" fill="#EA580C" stroke="#EA580C" stroke-width="1" rx="4"/>
+<text x="1254" y="286" font-family="Arial, sans-serif" font-size="10" fill="#888888" font-weight="normal" text-anchor="start">22.0%</text>
+<rect x="428" y="320" width="824" height="40" fill="#DBEAFE" stroke="#2563EB" stroke-width="1" rx="6"/>
+<text x="440" y="345" font-family="Arial, sans-serif" font-size="12" fill="#2563EB" font-weight="bold" text-anchor="start">Healthy planning range. Ready to proceed.</text>
+<text x="428" y="372" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="bold" text-anchor="start">DETAILS</text>
+<rect x="428" y="390" width="824" height="28" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="3"/>
+<text x="438" y="408" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Total Volume</text>
+<text x="1236" y="408" font-family="Arial, sans-serif" font-size="11" fill="#333333" font-weight="bold" text-anchor="end">48.0 m³</text>
+<rect x="428" y="420" width="824" height="28" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="3"/>
+<text x="438" y="438" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Total Weight</text>
+<text x="1236" y="438" font-family="Arial, sans-serif" font-size="11" fill="#333333" font-weight="bold" text-anchor="end">14,400 kg</text>
+<rect x="428" y="450" width="824" height="28" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="3"/>
+<text x="438" y="468" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Container Volume</text>
+<text x="1236" y="468" font-family="Arial, sans-serif" font-size="11" fill="#333333" font-weight="bold" text-anchor="end">67.0 m³</text>
+<rect x="428" y="480" width="824" height="28" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1" rx="3"/>
+<text x="438" y="498" font-family="Arial, sans-serif" font-size="11" fill="#888888" font-weight="normal" text-anchor="start">Container Payload</text>
+<text x="1236" y="498" font-family="Arial, sans-serif" font-size="11" fill="#333333" font-weight="bold" text-anchor="end">26,700 kg</text>
+<text x="428" y="520" font-family="Arial, sans-serif" font-size="9" fill="#888888" font-weight="normal" text-anchor="start">Planning estimate only. Confirm with your forwarder before booking.</text>
+<text x="1270" y="792" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF" font-weight="normal" text-anchor="end">Option B — Desktop  1280×800</text>
+</svg>

@@ -1,0 +1,58 @@
+{
+  "desktop": {
+    "file": "/Users/estherho/sc_product/products/container-utilization-checker/outputs/desktop-result.png",
+    "metrics": {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "hasHorizontalScroll": false,
+      "verdictVisibleAboveFold": true,
+      "supportingDetailsOpen": true,
+      "disabledCtas": [
+        {
+          "ariaDisabled": "true",
+          "nativeDisabled": false,
+          "text": "Generate Supplier Email Draft Coming in v1.1"
+        },
+        {
+          "ariaDisabled": "true",
+          "nativeDisabled": false,
+          "text": "Download Utilization Report Coming in v1.1"
+        }
+      ],
+      "disclaimer": "Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.",
+      "resultHeadline": "40GP fits at healthy 54% utilization."
+    }
+  },
+  "mobile": {
+    "file": "/Users/estherho/sc_product/products/container-utilization-checker/outputs/mobile-result.png",
+    "metrics": {
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "hasHorizontalScroll": false,
+      "verdictVisibleAboveFold": true,
+      "supportingDetailsOpen": false,
+      "disabledCtas": [
+        {
+          "ariaDisabled": "true",
+          "nativeDisabled": false,
+          "text": "Generate Supplier Email Draft Coming in v1.1"
+        },
+        {
+          "ariaDisabled": "true",
+          "nativeDisabled": false,
+          "text": "Download Utilization Report Coming in v1.1"
+        }
+      ],
+      "disclaimer": "Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.",
+      "resultHeadline": "40GP fits at healthy 54% utilization."
+    }
+  }
+}

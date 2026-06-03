@@ -1,0 +1,10 @@
+{
+  "name": "container-utilization-checker",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Static Container Utilization Checker / CBM Calculator MVP.",
+  "scripts": {
+    "start": "python3 -m http.server 4173 -d code",
+    "test": "node tests/run-ac-fixtures.js && node tests/run-rule-coverage.js"
+  }
+}

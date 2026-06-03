@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Container Utilization Checker / CBM Calculator</title>
+    <meta name="description" content="Check carton CBM, container fit, volume utilization, payload risk, and next-step recommendations before you book freight.">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="form-panel" aria-labelledby="tool-title">
+        <header class="tool-header">
+          <p class="eyebrow">Ocean Freight & Importing</p>
+          <h1 id="tool-title">Container Utilization Checker</h1>
+          <p class="intro">Check carton CBM, container fit, volume utilization, payload risk, and next-step recommendations before you book freight.</p>
+        </header>
+
+        <div id="guide-card" class="guide-card" data-guide-card>
+          <button class="icon-button guide-close" type="button" data-dismiss-guide aria-label="Dismiss guide">×</button>
+          <div class="guide-icon" aria-hidden="true">i</div>
+          <div>
+            <h2>How to use this tool</h2>
+            <ol>
+              <li>Fill in your carton dimensions, quantity, and weight.</li>
+              <li>Pick your container type.</li>
+              <li>See if your shipment fits — and what to do if it doesn't.</li>
+            </ol>
+            <p>Plan your container in under 90 seconds before you book.</p>
+          </div>
+        </div>
+
+        <div class="example-row">
+          <button class="secondary-button" type="button" data-example>Try an example</button>
+        </div>
+
+        <form id="calculator-form" class="calculator-form" novalidate>
+          <section class="form-section">
+            <h2>Carton dimensions</h2>
+            <div class="unit-row">
+              <span>Dimension unit</span>
+              <div class="segmented" role="group" aria-label="Dimension unit">
+                <button type="button" class="segment is-active" data-dim-unit="cm">cm</button>
+                <button type="button" class="segment" data-dim-unit="in">inch</button>
+              </div>
+            </div>
+            <div class="input-grid three">
+              <label class="field">
+                <span>Length</span>
+                <input id="length" name="length" inputmode="decimal" type="number" step="any" min="0" data-field="length">
+                <small class="error" data-error-for="length"></small>
+              </label>
+              <label class="field">
+                <span>Width</span>
+                <input id="width" name="width" inputmode="decimal" type="number" step="any" min="0" data-field="width">
+                <small class="error" data-error-for="width"></small>
+              </label>
+              <label class="field">
+                <span>Height</span>
+                <input id="height" name="height" inputmode="decimal" type="number" step="any" min="0" data-field="height">
+                <small class="error" data-error-for="height"></small>
+              </label>
+            </div>
+            <p class="helper" data-dim-helper>Outer dimensions of the carton in cm or inch.</p>
+            <div class="live-lines" data-live-dimensions></div>
+          </section>
+
+          <section class="form-section">
+            <h2>Shipment quantity</h2>
+            <label class="field">
+              <span>Carton quantity</span>
+              <input id="quantity" name="quantity" inputmode="numeric" type="number" step="1" min="1" data-field="quantity">
+              <small class="helper">Total number of cartons in this shipment.</small>
+              <small class="error" data-error-for="quantity"></small>
+            </label>
+          </section>
+
+          <section class="form-section">
+            <h2>Gross weight</h2>
+            <div class="unit-row">
+              <span>Weight unit</span>
+              <div class="segmented" role="group" aria-label="Weight unit">
+                <button type="button" class="segment is-active" data-weight-unit="kg">kg</button>
+                <button type="button" class="segment" data-weight-unit="lb">lb</button>
+              </div>
+            </div>
+            <label class="field">
+              <span>Gross weight per carton</span>
+              <input id="weight" name="weight" inputmode="decimal" type="number" step="any" min="0" data-field="weight">
+              <small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small>
+              <small class="error" data-error-for="weight"></small>
+            </label>
+            <div class="live-lines" data-live-weight></div>
+          </section>
+
+          <section class="form-section">
+            <h2>Container plan</h2>
+            <small class="helper">Standard ocean containers. Pick what your forwarder quoted.</small>
+            <div class="container-options" role="radiogroup" aria-label="Container type">
+              <label class="option-card is-selected">
+                <input type="radio" name="containerType" value="40GP" checked>
+                <span>40GP</span>
+                <small>67 CBM / 26,700 kg</small>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="containerType" value="20GP">
+                <span>20GP</span>
+                <small>33 CBM / 28,200 kg</small>
+              </label>
+              <label class="option-card">
+                <input type="radio" name="containerType" value="40HQ">
+                <span>40HQ</span>
+                <small>76 CBM / 26,500 kg</small>
+              </label>
+            </div>
+            <p class="container-echo" data-container-echo></p>
+          </section>
+
+          <section class="form-section">
+            <h2>Stackability</h2>
+            <small class="helper">Can cartons stack safely on top of each other?</small>
+            <div class="segmented wide" role="group" aria-label="Stackable">
+              <button type="button" class="segment is-active" data-stackable="yes">Yes</button>
+              <button type="button" class="segment" data-stackable="no">No</button>
+            </div>
+          </section>
+
+          <details class="optional-fields">
+            <summary>Optional: Add shipment details</summary>
+            <div class="input-grid optional">
+              <label class="field">
+                <span>Shipment name</span>
+                <input id="shipment-name" name="shipmentName" type="text">
+              </label>
+              <label class="field">
+                <span>Product category</span>
+                <input id="product-category" name="productCategory" type="text">
+              </label>
+              <label class="field">
+                <span>Shipment value</span>
+                <input id="shipment-value" name="shipmentValue" inputmode="decimal" type="number" step="any" min="0">
+              </label>
+            </div>
+          </details>
+
+          <div class="actions">
+            <button class="primary-button" type="submit">Check My Container</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="result-panel" aria-live="polite">
+        <div id="result-root" class="result-root">
+          <div class="empty-state" data-empty-state>
+            <p class="eyebrow">Live planning dashboard</p>
+            <h2>Enter shipment details to check fit.</h2>
+            <p>Your result will show container fit, CBM, payload risk, recommendation rules, and supporting calculation details.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

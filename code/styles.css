@@ -555,6 +555,13 @@ input:focus {
   line-height: 1.45;
 }
 
+.metric-rec {
+  font-size: 18px;
+  font-weight: 850;
+  color: var(--teal-dark);
+  line-height: 1.2;
+}
+
 .circle-meter {
   width: 88px;
   height: 88px;

@@ -540,13 +540,6 @@
     var detailsOpen = window.matchMedia("(min-width: 768px)").matches ? " open" : "";
     var volumeFill = Math.min(metrics.volumeUtil, 100);
     var volumeTone = metrics.volumeBand === "over" || metrics.volumeBand === "critical" ? "error" : metrics.volumeBand === "tight" ? "warning" : "";
-    var rules = metrics.visibleRules.map(function map(rule) {
-      return '<div class="rule-item ' + rule.severity + '"><strong>' + rule.id + ":</strong> " + escapeHtml(rule.message) + "</div>";
-    }).join("");
-    if (!rules) {
-      rules = '<div class="rule-item info"><strong>R4:</strong> Healthy planning range.</div>';
-    }
-
     rootEl.innerHTML = [
       '<article class="result-card">',
       '<div class="disclaimer-strip">Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.</div>',
@@ -558,9 +551,7 @@
       "</section>",
       renderMetricGrid(metrics, utilizationSuppressed),
       utilizationSuppressed ? '<section class="chart-card"><p class="support-note">Utilization cannot be calculated — carton dimension exceeds container interior.</p></section>' : renderChart(metrics, volumeFill, volumeTone),
-      '<section class="recommendations"><h3>What to do next</h3><div class="rule-list">' + rules + "</div>" + (!metrics.normalized.stackable ? '<p class="support-note">Non-stackable: utilization calculated on floor area only. Effective capacity is lower.</p>' : "") + "</section>",
       '<details class="supporting-details"' + detailsOpen + '><summary>Show calculation details</summary>' + renderDetails(metrics) + "</details>",
-      renderDisabledCtas(),
       '<p class="methodology">Container volumes and payload limits used in this tool are typical planning values from carrier equipment guides. They are not loading guarantees. Internal dimensions vary by carrier and container age.</p>',
       "</div>",
       "</article>"
@@ -577,7 +568,7 @@
     var tags = metrics.sanityTags.slice(0, 2).map(tagMarkup).join("");
     return [
       '<section class="metric-grid" aria-label="Container result metrics">',
-      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p><span class="metric-icon">C</span></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Best plan: <strong>' + escapeHtml(rec) + "</strong></div></div>",
+      '<div class="metric-card"><div class="metric-head"><p class="metric-label">Container Fit</p><span class="metric-icon">C</span></div><div class="metric-value">' + escapeHtml(fitStatus) + '</div><div class="metric-sub">Best plan</div><div class="metric-rec">' + escapeHtml(rec) + "</div></div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">Volume Utilization</p><span class="metric-icon">V</span></div>' + (utilizationSuppressed ? '<div class="metric-value">Blocked</div><div class="metric-sub">Dimension overflow</div>' : meterSvg(metrics.volumeUtil, metrics.volumeBand, "Volume utilization") + '<div class="metric-value">' + fmt(metrics.volumeUtil, 1) + '%</div><div class="metric-sub">' + escapeHtml(metrics.volumeBand) + "</div>") + tags + "</div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">Payload Utilization</p><span class="metric-icon">W</span></div>' + meterSvg(metrics.payloadUtil, metrics.payloadBand, "Payload utilization") + '<div class="metric-value">' + fmt(metrics.payloadUtil, 1) + '%</div><div class="metric-sub">' + fmtInt(metrics.totalWeightKg) + " kg / " + fmtInt(metrics.container.payload) + " kg</div></div>",
       '<div class="metric-card"><div class="metric-head"><p class="metric-label">CBM Summary</p><span class="metric-icon">B</span></div><div class="summary-stack"><div><span>Carton CBM</span><strong>' + fmt(metrics.cartonCbm, 3) + ' m³</strong></div><div><span>Total CBM</span><strong>' + fmt(metrics.totalCbm, 2) + ' m³</strong></div><div><span>Wasted space</span><strong>' + fmt(metrics.wastedSpace, 2) + ' m³</strong></div></div></div>',
@@ -609,16 +600,6 @@
     ].join("");
   }
 
-  function renderDisabledCtas() {
-    return [
-      '<section class="disabled-ctas"><h3>v1.1 placeholders</h3><div class="cta-grid">',
-      '<button type="button" class="disabled-button" aria-disabled="true" aria-describedby="supplier-email-desc" title="This feature is coming in v1.1. Check back soon.">Generate Supplier Email Draft <span class="coming-badge">Coming in v1.1</span></button>',
-      '<span id="supplier-email-desc" class="sr-only">Coming in v1.1. This feature is not yet available.</span>',
-      '<button type="button" class="disabled-button" aria-disabled="true" aria-describedby="report-desc" title="PDF report export is coming in v1.1.">Download Utilization Report <span class="coming-badge">Coming in v1.1</span></button>',
-      '<span id="report-desc" class="sr-only">Coming in v1.1. This feature is not yet available.</span>',
-      "</div></section>"
-    ].join("");
-  }
 
   function handleSubmit(event) {
     event.preventDefault();

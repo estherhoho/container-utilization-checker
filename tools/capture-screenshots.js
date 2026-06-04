@@ -102,6 +102,7 @@ async function captureViewport(name, width, height, mobile) {
   const load = client.waitFor("Page.loadEventFired");
   await client.send("Page.navigate", { url: "http://localhost:4173" });
   await load;
+  await waitForAppReady(client);
   let lineControlCheck = null;
   if (mobile) {
     const lineControlResult = await client.send("Runtime.evaluate", {
@@ -158,6 +159,23 @@ async function captureViewport(name, width, height, mobile) {
   fs.writeFileSync(file, Buffer.from(screenshot.data, "base64"));
   client.close();
   return { file, metrics: metricsResult.result.value, lineControlCheck };
+}
+
+async function waitForAppReady(client) {
+  for (let attempt = 0; attempt < 60; attempt += 1) {
+    const result = await client.send("Runtime.evaluate", {
+      returnByValue: true,
+      expression: `(() => {
+        const add = document.querySelector('[data-add-line]');
+        const example = document.querySelector('[data-example]');
+        const line = document.querySelector('[data-line-id]');
+        return Boolean(add && example && line);
+      })()`
+    });
+    if (result.result.value) return;
+    await sleep(100);
+  }
+  throw new Error("Timed out waiting for calculator app to render shipment lines.");
 }
 
 async function main() {

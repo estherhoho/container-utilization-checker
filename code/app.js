@@ -708,7 +708,7 @@
       '<p class="helper">Outer dimensions of the carton in cm or inch.</p>',
       '<div class="line-grid quantity-weight">',
       lineFieldMarkup(line, "quantity", "Carton quantity", index, "numeric", "1"),
-      '<div class="field-group weight-field-group">' + lineFieldMarkup(line, "weight", "Gross weight per carton", index) + '<small class="helper"><strong>Gross weight, including packaging.</strong> Not net.</small><div class="line-unit-row compact-unit-row"><span>Weight unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' weight unit"><button type="button" class="segment' + weightKgActive + '" data-line-weight-unit="kg">kg</button><button type="button" class="segment' + weightLbActive + '" data-line-weight-unit="lb">lb</button></div></div></div>',
+      '<div class="field-group weight-field-group">' + lineFieldMarkup(line, "weight", "Gross weight per carton", index) + '<div class="line-unit-row compact-unit-row"><span>Weight unit</span><div class="segmented" role="group" aria-label="Line ' + (index + 1) + ' weight unit"><button type="button" class="segment' + weightKgActive + '" data-line-weight-unit="kg">kg</button><button type="button" class="segment' + weightLbActive + '" data-line-weight-unit="lb">lb</button></div></div></div>',
       "</div>",
       '<div class="row-summary" data-row-summary="' + escapeHtml(line.id) + '"></div>',
       "</article>"

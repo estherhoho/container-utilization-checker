@@ -34,12 +34,12 @@
 - 5-10 private beta users.
 - Feedback log.
 
-## v1.1 — CSV Upload
+## v1.1 — Packing List Upload
 
-- Upload carton CSV.
-- Support multiple carton lines.
-- Validate fields.
-- Show per-line contribution to CBM.
+- Upload packing list file; accepted file types TBD: CSV, XLSX, or PDF.
+- Extract item label, dimensions, quantity, gross weight, and unit when present.
+- Let user review and edit extracted shipment lines before calculation.
+- Validate fields deterministically first; AI extraction can be optional later if useful.
 
 ## v2.0 — Container Mix Optimizer
 

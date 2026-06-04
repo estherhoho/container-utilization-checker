@@ -44,6 +44,17 @@
               </div>
               <button class="secondary-button compact-button" type="button" data-add-line>Add line</button>
             </div>
+            <div class="upload-card" data-upload-dropzone>
+              <div>
+                <strong>Upload packing list</strong>
+                <small class="helper">Excel or CSV now. PDF and image AI cleanup are planned for the next prototype.</small>
+              </div>
+              <div class="upload-actions">
+                <button class="secondary-button compact-button" type="button" data-upload-trigger>Choose file</button>
+                <input class="visually-hidden" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-file-input>
+              </div>
+            </div>
+            <div class="import-panel" data-import-panel hidden></div>
             <div class="shipment-lines" data-lines-list></div>
             <div class="shipment-toolbar">
               <button class="secondary-button compact-button" type="button" data-clear-lines>Clear all</button>

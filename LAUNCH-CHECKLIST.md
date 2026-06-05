@@ -2,27 +2,38 @@
 
 ## Before Private Beta
 
-- [ ] PRODUCT-SPEC approved.
-- [ ] DEV-PLAN approved.
-- [ ] Static MVP runs locally.
-- [ ] Mobile layout tested.
-- [ ] Formula sanity checks pass.
-- [ ] Result page has clear next action.
-- [ ] No visible placeholder.
-- [ ] Privacy note present if email capture exists.
-- [ ] Vercel preview URL created.
-- [ ] Chinese quick review summary prepared.
+- [x] PRODUCT-SPEC approved for MVP scope through Esther/Codex review.
+- [x] DEV-PLAN executed by Multica/Codex workflow.
+- [x] Static MVP runs locally.
+- [x] Mobile layout tested.
+- [x] Formula sanity checks pass.
+- [x] Result page has clear next action.
+- [x] No visible placeholder.
+- [x] Privacy note/email capture not applicable for MVP because there is no email capture.
+- [x] Vercel preview URL created.
+- [x] Chinese quick review summaries prepared during review cycles.
 
 ## Before Public Beta
 
-- [ ] REVIEW-GATE has no P0 or P1 blockers.
-- [ ] Website category and URL confirmed.
-- [ ] Tool card copy written.
-- [ ] SEO title and description written.
+- [x] REVIEW-GATE has no known P0 or P1 blockers for wrapped MVP.
+- [x] Website category and URL confirmed.
+- [x] Tool card copy written.
+- [x] SEO title and description written on Dock to AI toolkit route.
 - [ ] Feedback capture added.
 - [ ] LinkedIn launch draft ready.
 - [ ] 小红书 launch draft ready.
-- [ ] Esther approves.
+- [x] Esther approves MVP direction and current UI as good enough for now.
+
+## Wrapped MVP Live URLs
+
+- Dock to AI: `https://www.docktoai.com/toolkit/container-utilization-checker`
+- Standalone: `https://container-utilization-checker.vercel.app`
+
+## Deferred To Next Phase
+
+- AI messy packing-list upload from PDF, image, or unclean spreadsheet.
+- Feedback capture.
+- Launch content drafts.
 
 ## Suggested Review Links Format
 

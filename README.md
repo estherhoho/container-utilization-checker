@@ -2,7 +2,7 @@
 
 ## One-line Description
 
-A static, AI-assisted CBM and container utilization checker for importers, ecommerce brands, and operations teams.
+A static CBM and container utilization checker for importers, ecommerce brands, and operations teams. It supports manual multi-shipment input, deterministic CSV/XLSX packing-list import, container fit guidance, and light/dark website embedding.
 
 ## Target Users
 
@@ -30,9 +30,20 @@ The calculation layer is deterministic. AI or rule-based logic is used only for:
 - generating supplier / forwarder email drafts
 - creating a report summary
 
+Messy PDF/image/unclean spreadsheet extraction is a v0.5 roadmap item tracked separately in Multica DOC-52. It is not part of the wrapped MVP.
+
 ## Current Stage
 
-v0.2 static MVP implementation for DOC-41.
+MVP wrapped and deployed to Dock to AI.
+
+Implemented:
+
+- Multi-shipment/carton line manual entry.
+- Total CBM, gross weight, carton, and shipment-line summary.
+- Container fit, volume utilization, and payload utilization.
+- 20GP, 40GP, and 40HQ comparison.
+- CSV/XLSX packing-list upload prototype with deterministic review/import flow.
+- Light and dark theme support for both standalone and Dock to AI embedded versions.
 
 ## Run Locally
 
@@ -76,5 +87,18 @@ tests/ac-fixtures.html
 ## Website URL Target
 
 ```text
-/tools/ocean-import/container-utilization-checker
+https://www.docktoai.com/toolkit/container-utilization-checker
+```
+
+## Standalone Preview
+
+```text
+https://container-utilization-checker.vercel.app
+```
+
+## Latest Production Commits
+
+```text
+Product repo: 6808dd5 Add light and dark theme support
+Website repo: 681fe57 Add light and dark themes for toolkit tools
 ```

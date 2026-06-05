@@ -27,19 +27,30 @@
 - REVIEW-GATE.
 - Chinese quick summary for Esther.
 
+## v0.4 — Multi-Shipment + Structured Upload + Website Embed
+
+- Multi-line shipment/carton input.
+- Simplified dashboard with totals, container fit, volume utilization, and payload utilization.
+- 20GP / 40GP / 40HQ container comparison.
+- Deterministic CSV/XLSX packing-list upload prototype.
+- User review/import flow before calculation.
+- Dock to AI toolkit integration.
+- Light and dark theme support for Container Utilization Checker and Supply Chain AI Opportunity Scanner.
+
 ## v1.0 — Private Beta
 
-- Formspree or email capture.
-- Download/share report.
+- Feedback capture.
 - 5-10 private beta users.
-- Feedback log.
+- Feedback log and prioritization.
 
-## v1.1 — Packing List Upload
+## v1.1 — AI Messy Packing List Upload
 
-- Upload packing list file; accepted file types TBD: CSV, XLSX, or PDF.
+- Upload real packing-list files: messy PDF, Excel spreadsheet, or image.
+- Use AI/OCR/extraction to clean messy inputs into shipment lines.
 - Extract item label, dimensions, quantity, gross weight, and unit when present.
 - Let user review and edit extracted shipment lines before calculation.
-- Validate fields deterministically first; AI extraction can be optional later if useful.
+- Validate fields deterministically after extraction.
+- Track product/technical discovery in Multica DOC-52.
 
 ## v2.0 — Container Mix Optimizer
 

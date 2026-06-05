@@ -6,6 +6,34 @@
     <title>Container Utilization Checker / CBM Calculator</title>
     <meta name="description" content="Check carton CBM, container fit, volume utilization, payload risk, and the recommended container before you book freight.">
     <link rel="icon" href="data:,">
+    <script>
+      (function syncTheme() {
+        function validTheme(value) {
+          return value === "dark" || value === "light";
+        }
+        function applyTheme(theme) {
+          var next = validTheme(theme) ? theme : "light";
+          document.documentElement.dataset.theme = next;
+          document.documentElement.style.colorScheme = next;
+          try { localStorage.setItem("docktoai-tool-theme", next); } catch (error) {}
+        }
+        function initialTheme() {
+          var queryTheme = new URLSearchParams(window.location.search).get("theme");
+          if (validTheme(queryTheme)) return queryTheme;
+          try {
+            var storedTheme = localStorage.getItem("docktoai-tool-theme");
+            if (validTheme(storedTheme)) return storedTheme;
+          } catch (error) {}
+          return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        applyTheme(initialTheme());
+        window.addEventListener("message", function onMessage(event) {
+          if (event.origin !== window.location.origin) return;
+          if (!event.data || event.data.type !== "docktoai:set-theme") return;
+          applyTheme(event.data.theme);
+        });
+      })();
+    </script>
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>

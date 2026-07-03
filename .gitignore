@@ -4,3 +4,5 @@ node_modules/
 work/chrome-profile/
 npm-debug.log*
 .vercel
+chrome-profile/
+chrome-profile-browser-check/

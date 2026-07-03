@@ -1,0 +1,143 @@
+- main [ref=e2]:
+  - region "Container Utilization Checker" [ref=e3]:
+    - generic [ref=e4]:
+      - paragraph [ref=e5]: Ocean Freight & Importing
+      - heading "Container Utilization Checker" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Check carton CBM, container fit, volume utilization, payload risk, and the recommended container before you book freight.
+    - generic [ref=e8]:
+      - button "Dismiss guide" [ref=e9] [cursor=pointer]: ×
+      - generic [ref=e10]: i
+      - generic [ref=e11]:
+        - heading "How to use this tool" [level=2] [ref=e12]
+        - list [ref=e13]:
+          - listitem [ref=e14]: Fill in your carton dimensions, quantity, and weight.
+          - listitem [ref=e15]: Pick your container type.
+          - listitem [ref=e16]: See if your shipment fits and which container plan is recommended.
+        - paragraph [ref=e17]: Plan your container in under 90 seconds before you book.
+    - button "Try an example" [ref=e19] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - heading "Carton dimensions" [level=2] [ref=e22]
+        - generic [ref=e23]:
+          - generic [ref=e24]: Dimension unit
+          - group "Dimension unit" [ref=e25]:
+            - button "cm" [ref=e26] [cursor=pointer]
+            - button "inch" [ref=e27] [cursor=pointer]
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Length
+            - spinbutton "Length" [ref=e31]: "60"
+          - generic [ref=e32]:
+            - generic [ref=e33]: Width
+            - spinbutton "Width" [ref=e34]: "40"
+          - generic [ref=e35]:
+            - generic [ref=e36]: Height
+            - spinbutton "Height" [ref=e37]: "30"
+        - paragraph [ref=e38]: Outer dimensions of the carton in cm or inch.
+        - generic [ref=e82]:
+          - generic [ref=e83]: "Carton CBM: 0.072 m³"
+          - generic [ref=e84]: "Total shipment CBM: 36.00 m³"
+          - generic [ref=e85]: ✓ Standard FBA carton
+          - generic [ref=e86]: Medium density
+      - generic [ref=e39]:
+        - heading "Shipment quantity" [level=2] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]: Carton quantity
+          - spinbutton "Carton quantity Total number of cartons in this shipment." [ref=e43]: "500"
+          - generic [ref=e44]: Total number of cartons in this shipment.
+      - generic [ref=e45]:
+        - heading "Gross weight" [level=2] [ref=e46]
+        - generic [ref=e47]:
+          - generic [ref=e48]: Weight unit
+          - group "Weight unit" [ref=e49]:
+            - button "kg" [ref=e50] [cursor=pointer]
+            - button "lb" [ref=e51] [cursor=pointer]
+        - generic [ref=e52]:
+          - generic [ref=e53]: Gross weight per carton
+          - spinbutton "Gross weight per carton Gross weight, including packaging. Not net." [ref=e54]: "12"
+          - generic [ref=e55]:
+            - strong [ref=e56]: Gross weight, including packaging.
+            - text: Not net.
+        - generic [ref=e88]: "Total shipment weight: 6,000 kg"
+      - generic [ref=e57]:
+        - heading "Container plan" [level=2] [ref=e58]
+        - generic [ref=e59]: Standard ocean containers. Pick what your forwarder quoted.
+        - radiogroup "Container type" [ref=e60]:
+          - generic [ref=e61] [cursor=pointer]:
+            - radio "40GP 67 CBM / 26,700 kg" [checked] [ref=e62]
+            - generic [ref=e63]: 40GP
+            - generic [ref=e64]: 67 CBM / 26,700 kg
+          - generic [ref=e65] [cursor=pointer]:
+            - radio "20GP 33 CBM / 28,200 kg" [ref=e66]
+            - generic [ref=e67]: 20GP
+            - generic [ref=e68]: 33 CBM / 28,200 kg
+          - generic [ref=e69] [cursor=pointer]:
+            - radio "40HQ 76 CBM / 26,500 kg" [ref=e70]
+            - generic [ref=e71]: 40HQ
+            - generic [ref=e72]: 76 CBM / 26,500 kg
+        - paragraph [ref=e73]: "40GP planning estimate: 67.0 CBM, 26,700 kg payload, interior 12.032 × 2.352 × 2.395 m."
+      - generic [ref=e74]:
+        - heading "Stackability" [level=2] [ref=e75]
+        - generic [ref=e76]: Can cartons stack safely on top of each other?
+        - group "Stackable" [ref=e77]:
+          - button "Yes" [ref=e78] [cursor=pointer]
+          - button "No" [ref=e79] [cursor=pointer]
+      - button "Check My Container" [active] [ref=e81] [cursor=pointer]
+  - article [ref=e91]:
+    - generic [ref=e92]: Planning estimate only. Confirm with your forwarder before booking. Actual container capacity depends on carton geometry, loading method, pallets, and destination weight limits.
+    - generic [ref=e93]:
+      - generic [ref=e94]:
+        - generic [ref=e95]: Fits
+        - heading "40GP fits at healthy 54% utilization." [level=2] [ref=e96]
+        - paragraph [ref=e97]: 40GP fits at healthy 54% utilization. No flags.
+      - region "Container result metrics" [ref=e98]:
+        - generic [ref=e99]:
+          - paragraph [ref=e101]: CBM Summary
+          - generic [ref=e102]:
+            - generic [ref=e103]:
+              - generic [ref=e104]: Total CBM
+              - strong [ref=e105]: 36.00 m³
+            - generic [ref=e106]:
+              - generic [ref=e107]: Total gross weight
+              - strong [ref=e108]: 6,000 kg
+            - generic [ref=e109]:
+              - generic [ref=e110]: Cartons
+              - strong [ref=e111]: "500"
+            - generic [ref=e112]:
+              - generic [ref=e113]: Carton CBM
+              - strong [ref=e114]: 0.072 m³
+        - generic [ref=e115]:
+          - paragraph [ref=e117]: Container Fit
+          - generic [ref=e118]: Fits
+          - generic [ref=e119]: "Likely limiting factor: space"
+          - generic [ref=e120]:
+            - generic [ref=e121]: "Recommended:"
+            - strong [ref=e122]: 40GP
+        - generic [ref=e123]:
+          - paragraph [ref=e125]: Volume Utilization
+          - img "Volume utilization 53.7%" [ref=e126]
+          - generic [ref=e129]: 53.7%
+          - generic [ref=e130]: "Space use: under"
+          - generic [ref=e131]:
+            - generic [ref=e132]: Volume utilization = total shipment CBM / selected container CBM. It shows how much container space your cartons use.
+            - strong [ref=e133]: 36.00 CBM / 67.0 CBM
+          - generic [ref=e134]: ✓ Standard FBA carton
+          - generic [ref=e135]: Medium density
+        - generic [ref=e136]:
+          - paragraph [ref=e138]: Payload Utilization
+          - img "Payload utilization 22.5%" [ref=e139]
+          - generic [ref=e142]: 22.5%
+          - generic [ref=e143]: "Weight use: low"
+          - generic [ref=e144]:
+            - generic [ref=e145]: Payload utilization = total gross weight / selected container max payload. It shows whether weight, not space, may become the limit.
+            - strong [ref=e146]: 6,000 kg / 26,700 kg
+      - region "Capacity visualization" [ref=e147]:
+        - generic [ref=e148]:
+          - heading "Capacity visualization" [level=3] [ref=e149]
+          - generic [ref=e150]: 36.00 / 67.0 CBM
+        - generic [ref=e153]:
+          - generic [ref=e154]: Used capacity
+          - generic [ref=e155]: "Remaining planning space: 31.00 CBM"
+      - group [ref=e156]:
+        - generic "Show calculation details" [ref=e157] [cursor=pointer]
+      - paragraph [ref=e158]: Container volumes and payload limits used in this tool are typical planning values from carrier equipment guides. They are not loading guarantees. Internal dimensions vary by carrier and container age.

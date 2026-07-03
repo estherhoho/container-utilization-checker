@@ -1,0 +1,83 @@
+- main [ref=e2]:
+  - region "Container Utilization Checker" [ref=e3]:
+    - generic [ref=e4]:
+      - paragraph [ref=e5]: Ocean Freight & Importing
+      - heading "Container Utilization Checker" [level=1] [ref=e6]
+      - paragraph [ref=e7]: Check carton CBM, container fit, volume utilization, payload risk, and the recommended container before you book freight.
+    - generic [ref=e8]:
+      - button "Dismiss guide" [ref=e9] [cursor=pointer]: ×
+      - generic [ref=e10]: i
+      - generic [ref=e11]:
+        - heading "How to use this tool" [level=2] [ref=e12]
+        - list [ref=e13]:
+          - listitem [ref=e14]: Fill in your carton dimensions, quantity, and weight.
+          - listitem [ref=e15]: Pick your container type.
+          - listitem [ref=e16]: See if your shipment fits and which container plan is recommended.
+        - paragraph [ref=e17]: Plan your container in under 90 seconds before you book.
+    - button "Try an example" [ref=e19] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - heading "Carton dimensions" [level=2] [ref=e22]
+        - generic [ref=e23]:
+          - generic [ref=e24]: Dimension unit
+          - group "Dimension unit" [ref=e25]:
+            - button "cm" [ref=e26] [cursor=pointer]
+            - button "inch" [ref=e27] [cursor=pointer]
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: Length
+            - spinbutton "Length" [ref=e31]
+          - generic [ref=e32]:
+            - generic [ref=e33]: Width
+            - spinbutton "Width" [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]: Height
+            - spinbutton "Height" [ref=e37]
+        - paragraph [ref=e38]: Outer dimensions of the carton in cm or inch.
+      - generic [ref=e39]:
+        - heading "Shipment quantity" [level=2] [ref=e40]
+        - generic [ref=e41]:
+          - generic [ref=e42]: Carton quantity
+          - spinbutton "Carton quantity Total number of cartons in this shipment." [ref=e43]
+          - generic [ref=e44]: Total number of cartons in this shipment.
+      - generic [ref=e45]:
+        - heading "Gross weight" [level=2] [ref=e46]
+        - generic [ref=e47]:
+          - generic [ref=e48]: Weight unit
+          - group "Weight unit" [ref=e49]:
+            - button "kg" [ref=e50] [cursor=pointer]
+            - button "lb" [ref=e51] [cursor=pointer]
+        - generic [ref=e52]:
+          - generic [ref=e53]: Gross weight per carton
+          - spinbutton "Gross weight per carton Gross weight, including packaging. Not net." [ref=e54]
+          - generic [ref=e55]:
+            - strong [ref=e56]: Gross weight, including packaging.
+            - text: Not net.
+      - generic [ref=e57]:
+        - heading "Container plan" [level=2] [ref=e58]
+        - generic [ref=e59]: Standard ocean containers. Pick what your forwarder quoted.
+        - radiogroup "Container type" [ref=e60]:
+          - generic [ref=e61] [cursor=pointer]:
+            - radio "40GP 67 CBM / 26,700 kg" [checked] [ref=e62]
+            - generic [ref=e63]: 40GP
+            - generic [ref=e64]: 67 CBM / 26,700 kg
+          - generic [ref=e65] [cursor=pointer]:
+            - radio "20GP 33 CBM / 28,200 kg" [ref=e66]
+            - generic [ref=e67]: 20GP
+            - generic [ref=e68]: 33 CBM / 28,200 kg
+          - generic [ref=e69] [cursor=pointer]:
+            - radio "40HQ 76 CBM / 26,500 kg" [ref=e70]
+            - generic [ref=e71]: 40HQ
+            - generic [ref=e72]: 76 CBM / 26,500 kg
+        - paragraph [ref=e73]: "40GP planning estimate: 67.0 CBM, 26,700 kg payload, interior 12.032 × 2.352 × 2.395 m."
+      - generic [ref=e74]:
+        - heading "Stackability" [level=2] [ref=e75]
+        - generic [ref=e76]: Can cartons stack safely on top of each other?
+        - group "Stackable" [ref=e77]:
+          - button "Yes" [ref=e78] [cursor=pointer]
+          - button "No" [ref=e79] [cursor=pointer]
+      - button "Check My Container" [ref=e81] [cursor=pointer]
+  - generic [ref=e84]:
+    - paragraph [ref=e85]: Live planning dashboard
+    - heading "Enter shipment details to check fit." [level=2] [ref=e86]
+    - paragraph [ref=e87]: Your result will show container fit, CBM, payload risk, recommended container, and supporting calculation details.
